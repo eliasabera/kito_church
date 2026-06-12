@@ -1,0 +1,538 @@
+{
+  "@@locale": "en",
+  "appTitle": "KGC Connect",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "email": "Email",
+  "password": "Password",
+  "student": "Student",
+  "teacher": "Teacher",
+  "admin": "Admin",
+  "dashboard": "Dashboard",
+  "attendance": "Attendance",
+  "lessons": "Lessons",
+  "assignments": "Assignments",
+  "quizzes": "Quizzes",
+  "scores": "Scores",
+  "ranking": "Ranking",
+  "gifts": "Gifts",
+  "dailyVerse": "Daily Verse",
+  "sponsorship": "Sponsorship",
+  "announcements": "Announcements",
+  "prayerRequests": "Prayer Requests",
+  "certificates": "Certificates",
+  "settings": "Settings",
+  "language": "Language",
+  "english": "English",
+  "amharic": "Amharic",
+  "welcome": "Welcome",
+  "comingSoon": "Coming soon",
+  "studentRegistration": "Student Registration",
+  "fullName": "Full Name",
+  "dateOfBirth": "Date of Birth",
+  "grade": "Grade",
+  "phoneNumber": "Phone Number",
+  "optional": "Optional",
+  "submit": "Submit",
+  "cancel": "Cancel",
+  "save": "Save",
+  "present": "Present",
+  "absent": "Absent",
+  "late": "Late",
+  "physicalAttendance": "Physical Attendance",
+  "onlineAttendance": "Online Attendance",
+  "myClasses": "My Classes",
+  "studentPerformance": "Student Performance",
+  "manageUsers": "Manage Users",
+  "scoringSystem": "Scoring System",
+  "reports": "Reports",
+  "attendancePercent": "Attendance %",
+  "currentRank": "Current Rank",
+  "latestScore": "Latest Score",
+  "newAssignments": "New Assignments",
+  "giftNotifications": "Gift Notifications",
+  "todaysClasses": "Today's Classes",
+  "totalStudents": "Total Students",
+  "totalTeachers": "Total Teachers",
+  "pendingApproval": "Pending Approval",
+  "approve": "Approve",
+  "reject": "Reject",
+  "selectRole": "Select your role",
+  "home": "Home",
+  "learning": "Learning",
+  "profile": "Profile",
+  "appTagline": "Compassion Learning Platform",
+  "compassionProjectId": "Compassion Project ID",
+  "selectCompassionId": "Select Compassion ID",
+  "noCompassionIdsAvailable": "No Compassion IDs available. Contact admin.",
+  "pleaseSelectCompassionId": "Please select your Compassion ID",
+  "menuMain": "Main",
+  "menuMore": "More",
+  "churchName": "Church Name",
+  "pending": "Pending",
+  "received": "Received",
+  "delivered": "Delivered",
+  "digitalGift": "Digital Gift",
+  "physicalGift": "Physical Gift",
+  "bibleMemory": "Bible Memory",
+  "participation": "Participation",
+  "classRank": "Class Rank",
+  "branchRank": "Branch Rank",
+  "projectRank": "Project Rank",
+  "verseReference": "Reference",
+  "uploadVerse": "Upload Verse",
+  "manageGifts": "Manage Gifts",
+  "manageSponsorship": "Manage Sponsorship",
+  "createAnnouncement": "Create Announcement",
+  "submitPrayerRequest": "Submit Prayer Request",
+  "generateCertificate": "Generate Certificate",
+  "recentAnnouncements": "Recent Announcements",
+  "viewAll": "View All",
+  "yourStatus": "Your Status",
+  "all": "All",
+  "completed": "Completed",
+  "dueOn": "Due",
+  "start": "Start",
+  "newLabel": "New",
+  "learningOverview": "Learning Overview",
+  "readLesson": "Read",
+  "submitWork": "Submit",
+  "takeQuiz": "Take Quiz",
+  "noLearningItems": "No items in this category",
+  "filterBy": "Filter by",
+  "teacherName": "Teacher",
+  "status": "Status",
+  "description": "Description",
+  "completedCount": "{completed}/{total} done",
+  "@completedCount": {
+    "placeholders": {
+      "completed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "showingItems": "Showing {count} {type}",
+  "@showingItems": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "type": {"type": "String"}
+    }
+  },
+  "lessonReader": "Lesson Reader",
+  "quizPractice": "Quiz Practice",
+  "assignmentSubmission": "Submit Assignment",
+  "yourAnswer": "Your Answer",
+  "typeYourAnswer": "Type your answer here...",
+  "attachFile": "Attach File",
+  "assignmentSubmitted": "Assignment submitted successfully",
+  "next": "Next",
+  "finishQuiz": "Finish",
+  "questionProgress": "Question {current} of {total}",
+  "@questionProgress": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "quizScore": "You scored {score} out of {total}",
+  "@quizScore": {
+    "placeholders": {
+      "score": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "myRanking": "My Ranking",
+  "finalScore": "Final Score",
+  "leaderboard": "Leaderboard",
+  "personalInfo": "Personal Info",
+  "department": "Department",
+  "sponsorName": "Sponsor Name",
+  "sponsorCountry": "Sponsor Country",
+  "attendanceOverview": "Attendance Overview",
+  "attendanceHistory": "Attendance History",
+  "sessionsAttended": "{attended} of {total} sessions",
+  "@sessionsAttended": {
+    "placeholders": {
+      "attended": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "currentStreak": "Current Streak",
+  "weeks": "weeks",
+  "noAttendanceRecords": "No attendance records found",
+  "makeUpAttendance": "Make Up Attendance",
+  "completeLessonToMark": "Read the lesson below, then mark your online attendance.",
+  "markLessonComplete": "I Finished the Lesson",
+  "markOnlineAttendance": "Mark Online Attendance",
+  "attendanceMarkedSuccess": "Attendance marked successfully!",
+  "pendingMakeUp": "Pending Make-Up",
+  "pendingMakeUpCount": "{count} session(s) need make-up",
+  "@pendingMakeUpCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "learnAndMark": "Learn & Mark Attendance",
+  "lessonCompleted": "Lesson completed",
+  "stepReadLesson": "Read lesson",
+  "stepMarkAttendance": "Mark attendance",
+  "makeUpAttendanceHint": "You were absent. Complete that day's lesson to mark your online attendance.",
+  "readyToMarkAttendance": "Lesson done — tap to mark attendance",
+  "giftOverview": "Gift Overview",
+  "totalGifts": "Total Gifts",
+  "myGifts": "My Gifts",
+  "fromSponsor": "From",
+  "noGifts": "No gifts found",
+  "mySponsor": "My Sponsor",
+  "sponsoredSince": "Sponsored since",
+  "lettersFromSponsor": "Letters from Sponsor",
+  "sponsorMessage": "Message from Sponsor",
+  "noLetters": "No letters yet",
+  "announcementOverview": "Announcements Overview",
+  "totalAnnouncements": "Total Announcements",
+  "thisWeek": "This Week",
+  "noAnnouncements": "No announcements found",
+  "postedBy": "By",
+  "readMore": "Read more",
+  "churchAnnouncements": "Church",
+  "events": "Events",
+  "academic": "Academic",
+  "prayerOverview": "Prayer Overview",
+  "myPrayerRequests": "My Prayer Requests",
+  "prayerRequestHint": "Share a request with your church community",
+  "prayerRequestSubmitted": "Prayer request submitted",
+  "enterPrayerRequest": "Write your prayer request here...",
+  "noPrayerRequests": "No prayer requests yet",
+  "praying": "Praying",
+  "answered": "Answered",
+  "sidebarFaithLearning": "Faith & Learning",
+  "sidebarCompassion": "Compassion",
+  "sidebarCommunity": "Community",
+  "sidebarTeaching": "Teaching",
+  "sidebarAdminTools": "Admin Tools",
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "sundaySchool": "Sunday School",
+  "homeHeroSubtitle": "Grow in faith, learn, and connect with your church",
+  "exploreToday": "Explore Today",
+  "weeklyLessonTitle": "Bible Study — Week 3",
+  "weeklyLessonSubtitle": "Continue this week's lesson and reflection",
+  "continueLearning": "Continue learning",
+  "bibleStories": "Bible Stories",
+  "bibleStory": "BIBLE STORY",
+  "swipeBibleStories": "Swipe to explore stories from Scripture",
+  "storyDavidTitle": "David & Goliath",
+  "storyDavidSummary": "A young shepherd trusted God and defeated a giant with courage and faith.",
+  "storyMosesTitle": "Moses & the Red Sea",
+  "storyMosesSummary": "God opened the sea for His people, showing that He always makes a way.",
+  "storyJonahTitle": "Jonah",
+  "storyJonahSummary": "Running from God's call taught Jonah that obedience brings mercy and purpose.",
+  "storyDanielTitle": "Daniel in the Lion's Den",
+  "storyDanielSummary": "Daniel prayed faithfully and God protected him — stand firm in your beliefs.",
+  "storySamaritanTitle": "The Good Samaritan",
+  "storySamaritanSummary": "True faith shows love in action — help others even when it costs you.",
+  "storyJesusStormTitle": "Jesus Calms the Storm",
+  "storyJesusStormSummary": "When life feels overwhelming, Jesus brings peace to those who trust Him.",
+  "learningPath": "Your Learning Path",
+  "learningPathHint": "Lessons post on Saturday — complete the lesson and assessment before the deadline to mark Sunday attendance",
+  "weekNumber": "Week {number}",
+  "@weekNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "unitNumber": "Unit {number}",
+  "@unitNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "timeSpent": "{seconds}s",
+  "@timeSpent": {
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "readingProgress": "{percent}% read",
+  "@readingProgress": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "completeLesson": "Complete Lesson",
+  "lessonCompletedSuccess": "Lesson completed! Quiz or assignment is now unlocked.",
+  "lessonCompleteRequirements": "Keep reading — scroll through the lesson and spend a little more time.",
+  "keepReadingTime": "Read for {seconds} more seconds",
+  "@keepReadingTime": {
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "keepReadingScroll": "Scroll to the end of the lesson to continue",
+  "overallProgress": "Overall Progress",
+  "totalStudyTime": "{minutes} min studied",
+  "@totalStudyTime": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "locked": "Locked",
+  "unitLocked": "Complete the previous unit's lesson first",
+  "weekLocked": "Complete the previous week's lesson first",
+  "activityLocked": "Complete the lesson first to unlock this activity",
+  "deadlineDate": "Deadline {date}",
+  "@deadlineDate": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "attendanceHeatmap": "Weekly Attendance",
+  "attendanceHeatmapHint": "Each block is a Sunday class. Finish the lesson and assessment before the deadline to mark online attendance.",
+  "heatmapPresent": "Present",
+  "heatmapOnline": "Online",
+  "heatmapLate": "Late",
+  "heatmapPending": "Pending",
+  "heatmapMissed": "Missed",
+  "heatmapFuture": "Upcoming",
+  "heatmapNoLesson": "No lesson",
+  "todaysVerse": "Today's Verse",
+  "today": "Today",
+  "previousVerses": "Previous Verses",
+  "previousVersesHint": "All verses posted by date, newest first",
+  "noPreviousVerses": "No previous verses yet",
+  "verseArchive": "Verse Archive",
+  "versesPostedCount": "{count} verses posted",
+  "@versesPostedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "daysWithVerses": "Days",
+  "versePostedOn": "Posted {date}",
+  "@versePostedOn": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "verseReflectionHint": "Take a moment to reflect on this verse and how it applies to your life today.",
+  "teacherHomeSubtitle": "Guide your students in faith, learning, and spiritual growth",
+  "teachingOverview": "Teaching Overview",
+  "classesToday": "Classes Today",
+  "pendingReviews": "To Review",
+  "studentsCount": "{count} students",
+  "@studentsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "quickActions": "Quick Actions",
+  "recentActivity": "Recent Activity",
+  "prayerRequest": "Prayer Request",
+  "ageRange": "Ages {min}–{max}",
+  "@ageRange": {
+    "placeholders": {
+      "min": {"type": "int"},
+      "max": {"type": "int"}
+    }
+  },
+  "lessonsOverview": "Lessons Overview",
+  "totalLessons": "Total Lessons",
+  "avgCompletion": "Avg. Completion",
+  "lessonStatusDraft": "Draft",
+  "lessonStatusPublished": "Published",
+  "lessonStatusActive": "Active",
+  "lessonStatusClosed": "Closed",
+  "allLessons": "All Lessons",
+  "noLessons": "No lessons match this filter",
+  "postLesson": "Post Lesson",
+  "postNewLesson": "Post New Lesson",
+  "postLessonHint": "Lessons are posted for students by age range. Set a deadline for lesson and assessment completion.",
+  "lessonTitle": "Lesson Title",
+  "lessonTitleRequired": "Please enter a lesson title",
+  "classAgeRange": "Class Age Range",
+  "minAge": "Min Age",
+  "maxAge": "Max Age",
+  "invalidAgeRange": "Minimum age cannot be greater than maximum age",
+  "includeQuiz": "Include Quiz",
+  "includeAssignment": "Include Assignment",
+  "saveDraft": "Save Draft",
+  "publishLesson": "Publish",
+  "lessonPublished": "Lesson published successfully",
+  "lessonSavedAsDraft": "Lesson saved as draft",
+  "postedOn": "Posted {date}",
+  "@postedOn": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "deadlineOn": "Due {date}",
+  "@deadlineOn": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "studentsCompletedCount": "{completed}/{total} completed",
+  "@studentsCompletedCount": {
+    "placeholders": {
+      "completed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "selectClassSession": "Select Class Session",
+  "studentAttendance": "Student Attendance",
+  "markAttendanceHint": "Tap Present, Late, or Absent to mark each student",
+  "notMarked": "Not Marked",
+  "studentsUnmarked": "{count} students not yet marked",
+  "@studentsUnmarked": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "expandDetails": "Expand week details",
+  "collapseDetails": "Minimize week details",
+  "sessionLockedHint": "Past sessions are locked — attendance cannot be changed",
+  "assignmentsOverview": "Assignments Overview",
+  "quizzesOverview": "Quizzes Overview",
+  "performanceOverview": "Class Performance",
+  "totalAssignments": "Total Assignments",
+  "totalQuizzes": "Total Quizzes",
+  "classAvgScore": "Class Avg. Score",
+  "attempted": "Attempted",
+  "submitted": "Submitted",
+  "allAssignments": "All Assignments",
+  "allQuizzes": "All Quizzes",
+  "noAssignments": "No assignments match this filter",
+  "noQuizzes": "No quizzes match this filter",
+  "noPerformanceData": "No students match this filter",
+  "needsAttention": "Needs Attention",
+  "topPerformers": "Top Performers",
+  "submittedCount": "{submitted}/{total} submitted",
+  "@submittedCount": {
+    "placeholders": {
+      "submitted": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "pendingReviewCount": "{count} to review",
+  "@pendingReviewCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "attemptedCount": "{attempted}/{total} attempted",
+  "@attemptedCount": {
+    "placeholders": {
+      "attempted": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "passedCount": "{count} passed",
+  "@passedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "notAttemptedCount": "{count} not attempted",
+  "@notAttemptedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "overallScoreLabel": "Overall score: {score}%",
+  "@overallScoreLabel": {
+    "placeholders": {
+      "score": {"type": "int"}
+    }
+  },
+  "lessonsProgress": "{completed}/{total}",
+  "@lessonsProgress": {
+    "placeholders": {
+      "completed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "assignmentsProgress": "Assignments: {submitted}/{total} submitted",
+  "@assignmentsProgress": {
+    "placeholders": {
+      "submitted": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "studentSubmissions": "Student Submissions",
+  "notSubmitted": "Not submitted",
+  "awaitingReview": "Awaiting review",
+  "graded": "Graded",
+  "createAssignment": "Create Assignment",
+  "editAssignment": "Edit Assignment",
+  "createQuiz": "Create Quiz",
+  "editQuiz": "Edit Quiz",
+  "assignmentTitleLabel": "Assignment Title",
+  "assignmentTitleRequired": "Please enter an assignment title",
+  "assignmentInstructions": "Instructions",
+  "assignmentInstructionsHint": "Describe what students should submit...",
+  "assignmentEditorHint": "Link this assignment to a lesson and write clear instructions for students.",
+  "attachAssignmentFile": "Attach Reference File",
+  "selectLesson": "Link to Lesson",
+  "selectLessonRequired": "Please select a lesson",
+  "lessonWeekOption": "Week {week} — {title}",
+  "@lessonWeekOption": {
+    "placeholders": {
+      "week": {"type": "int"},
+      "title": {"type": "String"}
+    }
+  },
+  "quizTitleLabel": "Quiz Title",
+  "quizTitleRequired": "Please enter a quiz title",
+  "quizEditorHint": "Build quiz questions with multiple-choice answers and mark the correct option.",
+  "quizQuestions": "Questions",
+  "addQuestion": "Add Question",
+  "questionNumber": "Question {number}",
+  "@questionNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "questionText": "Question",
+  "optionLabel": "Option {number}",
+  "@optionLabel": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "correctAnswerHint": "Select the radio button for the correct answer",
+  "instructionsRequired": "Please enter assignment instructions",
+  "quizQuestionsInvalid": "Add at least one complete question with all options filled",
+  "saveAssessment": "Save",
+  "assessmentSaved": "Assessment saved successfully",
+  "needsSetup": "Needs setup",
+  "questionsCount": "{count} questions",
+  "@questionsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "like": "Like",
+  "likesCount": "{count} likes",
+  "@likesCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "comment": "Comment",
+  "comments": "Comments",
+  "commentsCount": "{count} comments",
+  "@commentsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "addCommentHint": "Write a comment...",
+  "noComments": "No comments yet",
+  "changeStatus": "Update status",
+  "studentPrayerRequests": "Student Prayer Requests",
+  "teacherPrayerViewHint": "Students submit prayer requests. View them here and join in prayer with likes and comments."
+}
