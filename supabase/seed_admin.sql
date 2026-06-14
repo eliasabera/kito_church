@@ -1,0 +1,1 @@
+-- Use setup_users_table.sql instead (creates public.users + admin + teacher).

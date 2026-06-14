@@ -116,6 +116,57 @@ class PrayerRequestTile extends StatelessWidget {
               height: 1.5,
             ),
           ),
+          if (role == UserRole.student && store.canStudentEdit(request)) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: isAnswered
+                        ? () {
+                            store.updateStatus(
+                              request.id,
+                              PrayerRequestStatus.praying,
+                            );
+                          }
+                        : null,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      side: BorderSide(
+                        color: !isAnswered
+                            ? AppColors.primary
+                            : AppColors.primary.withValues(alpha: 0.25),
+                        width: !isAnswered ? 2 : 1,
+                      ),
+                    ),
+                    child: Text(l10n.praying),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton.tonal(
+                    onPressed: !isAnswered
+                        ? () {
+                            store.updateStatus(
+                              request.id,
+                              PrayerRequestStatus.answered,
+                            );
+                          }
+                        : null,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: isAnswered
+                          ? const Color(0xFF2E7D32).withValues(alpha: 0.15)
+                          : AppColors.primary.withValues(alpha: 0.08),
+                      foregroundColor: isAnswered
+                          ? const Color(0xFF2E7D32)
+                          : AppColors.primary,
+                    ),
+                    child: Text(l10n.answered),
+                  ),
+                ),
+              ],
+            ),
+          ],
           const SizedBox(height: 12),
           Row(
             children: [

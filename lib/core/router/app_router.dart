@@ -8,6 +8,11 @@ import 'package:kitoapp/features/attendance/screens/attendance_screen.dart';
 import 'package:kitoapp/features/attendance/screens/makeup_attendance_screen.dart';
 import 'package:kitoapp/features/auth/screens/login_screen.dart';
 import 'package:kitoapp/features/auth/screens/student_registration_screen.dart';
+import 'package:kitoapp/features/admin/screens/admin_create_announcement_screen.dart';
+import 'package:kitoapp/features/admin/screens/admin_manage_bible_stories_screen.dart';
+import 'package:kitoapp/features/admin/screens/admin_manage_gifts_screen.dart';
+import 'package:kitoapp/features/admin/screens/admin_manage_sponsorship_screen.dart';
+import 'package:kitoapp/features/admin/screens/admin_upload_verse_screen.dart';
 import 'package:kitoapp/features/bible_verse/screens/daily_verse_screen.dart';
 import 'package:kitoapp/features/certificates/screens/certificates_screen.dart';
 import 'package:kitoapp/features/dashboard/screens/admin_dashboard_screen.dart';
@@ -23,10 +28,12 @@ import 'package:kitoapp/features/learning/screens/teacher_assignments_screen.dar
 import 'package:kitoapp/features/learning/screens/teacher_classes_content.dart';
 import 'package:kitoapp/features/learning/screens/teacher_performance_screen.dart';
 import 'package:kitoapp/features/learning/screens/teacher_quizzes_screen.dart';
+import 'package:kitoapp/features/notifications/screens/notifications_screen.dart';
 import 'package:kitoapp/features/prayer_requests/screens/prayer_requests_screen.dart';
+import 'package:kitoapp/features/admin/screens/admin_settings_screen.dart';
 import 'package:kitoapp/features/profile/screens/profile_content.dart';
+import 'package:kitoapp/features/admin/screens/admin_reports_screen.dart';
 import 'package:kitoapp/features/ranking/screens/ranking_screen.dart';
-import 'package:kitoapp/features/scoring/screens/scoring_screen.dart';
 import 'package:kitoapp/features/sponsorship/screens/sponsorship_screen.dart';
 import 'package:kitoapp/shared/widgets/role_shell_scaffold.dart';
 
@@ -54,6 +61,7 @@ class StudentRoutes {
   static const sponsorship = '/student/sponsorship';
   static const announcements = '/student/announcements';
   static const prayerRequests = '/student/prayer-requests';
+  static const notifications = '/student/notifications';
   static String learningItem(String id) => '/student/learning/item/$id';
   static String lessonReader(String id) => '/student/learning/lesson/$id';
   static String quizPractice(String id) => '/student/learning/quiz/$id';
@@ -81,12 +89,13 @@ class AdminRoutes {
   static const users = '/admin/users';
   static const reports = '/admin/reports';
   static const settings = '/admin/settings';
-  static const scoring = '/admin/scoring';
   static const dailyVerse = '/admin/daily-verse';
   static const gifts = '/admin/gifts';
   static const sponsorship = '/admin/sponsorship';
   static const announcements = '/admin/announcements';
+  static const bibleStories = '/admin/bible-stories';
   static const certificates = '/admin/certificates';
+  static const notifications = '/admin/notifications';
 }
 
 GoRouter createAppRouter() {
@@ -211,6 +220,7 @@ List<RouteBase> _studentOverlayRoutes() {
     _overlayRoute('sponsorship', const SponsorshipScreen()),
     _overlayRoute('announcements', const AnnouncementsScreen()),
     _overlayRoute('prayer-requests', const PrayerRequestsScreen()),
+    _overlayRoute('notifications', const StudentNotificationsScreen()),
   ];
 }
 
@@ -300,7 +310,7 @@ StatefulShellRoute _adminShellRoute() {
         routes: [
           GoRoute(
             path: AdminRoutes.reports,
-            builder: (context, state) => const RankingContent(),
+            builder: (context, state) => const AdminReportsContent(),
           ),
         ],
       ),
@@ -308,7 +318,7 @@ StatefulShellRoute _adminShellRoute() {
         routes: [
           GoRoute(
             path: AdminRoutes.settings,
-            builder: (context, state) => const ProfileContent(),
+            builder: (context, state) => const AdminSettingsContent(),
           ),
         ],
       ),
@@ -318,12 +328,13 @@ StatefulShellRoute _adminShellRoute() {
 
 List<RouteBase> _adminOverlayRoutes() {
   return [
-    _overlayRoute('scoring', const ScoringScreen()),
-    _overlayRoute('daily-verse', const DailyVerseScreen()),
-    _overlayRoute('gifts', const GiftsScreen()),
-    _overlayRoute('sponsorship', const SponsorshipScreen()),
-    _overlayRoute('announcements', const AnnouncementsScreen()),
+    _overlayRoute('daily-verse', const AdminUploadVerseScreen()),
+    _overlayRoute('gifts', const AdminManageGiftsScreen()),
+    _overlayRoute('sponsorship', const AdminManageSponsorshipScreen()),
+    _overlayRoute('announcements', const AdminCreateAnnouncementScreen()),
+    _overlayRoute('bible-stories', const AdminManageBibleStoriesScreen()),
     _overlayRoute('certificates', const CertificatesScreen()),
+    _overlayRoute('notifications', const AdminNotificationsScreen()),
   ];
 }
 

@@ -6,6 +6,7 @@ import 'package:kitoapp/features/learning/data/student_learning_data.dart';
 import 'package:kitoapp/features/learning/models/learning_item.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
+import 'package:kitoapp/shared/widgets/student_learning_catalog_provider.dart';
 
 class LearningItemDetailScreen extends StatelessWidget {
   const LearningItemDetailScreen({super.key, required this.itemId});
@@ -24,7 +25,8 @@ class LearningItemDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final item = StudentLearningData.findById(itemId);
+    final item = StudentLearningCatalogProvider.of(context).findById(itemId) ??
+        StudentLearningData.findById(itemId);
 
     if (item == null) {
       return AppScaffold(

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/models/bible_verse.dart';
+import 'package:kitoapp/shared/widgets/verse_image.dart';
 
 void showDailyVerseDetailSheet(BuildContext context, BibleVerse verse) {
   showModalBottomSheet<void>(
@@ -46,6 +47,15 @@ class _DailyVerseDetailSheet extends StatelessWidget {
                     color: AppColors.text.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(2),
                   ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: SizedBox(
+                  height: 160,
+                  width: double.infinity,
+                  child: VerseImage(verse: verse),
                 ),
               ),
               const SizedBox(height: 20),

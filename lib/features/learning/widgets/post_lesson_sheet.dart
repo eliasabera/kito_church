@@ -80,7 +80,7 @@ class _PostLessonSheetState extends State<_PostLessonSheet> {
     }
   }
 
-  void _submit({required bool publish}) {
+  Future<void> _submit({required bool publish}) async {
     if (_submitting) return;
 
     final l10n = AppLocalizations.of(context);
@@ -100,23 +100,32 @@ class _PostLessonSheetState extends State<_PostLessonSheet> {
 
     setState(() => _submitting = true);
 
-    final store = TeacherLessonsStoreProvider.of(context);
-    store.postLesson(
-      PostLessonDraft(
-        title: title,
-        minAge: _minAge,
-        maxAge: _maxAge,
-        deadline: _deadline,
-        description: _descriptionController.text,
-        hasQuiz: _hasQuiz,
-        hasAssignment: _hasAssignment,
-        publish: publish,
-      ),
-    );
+    try {
+      final store = TeacherLessonsStoreProvider.of(context);
+      await store.postLesson(
+        PostLessonDraft(
+          title: title,
+          minAge: _minAge,
+          maxAge: _maxAge,
+          deadline: _deadline,
+          description: _descriptionController.text,
+          hasQuiz: _hasQuiz,
+          hasAssignment: _hasAssignment,
+          publish: publish,
+        ),
+      );
 
-    widget.onSuccess(
-      publish ? l10n.lessonPublished : l10n.lessonSavedAsDraft,
-    );
+      if (!mounted) return;
+      widget.onSuccess(
+        publish ? l10n.lessonPublished : l10n.lessonSavedAsDraft,
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.lessonSaveFailed)),
+      );
+      setState(() => _submitting = false);
+    }
   }
 
   @override

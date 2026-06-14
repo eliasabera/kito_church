@@ -30,32 +30,3 @@ class TeacherClassSession {
   final String lessonTitle;
 }
 
-class TeacherDashboardData {
-  TeacherDashboardData._();
-
-  static const stats = TeacherDashboardStats(
-    totalStudents: 28,
-    classesToday: 2,
-    pendingReviews: 5,
-    attendancePercent: 86,
-  );
-
-  static const todayClasses = [
-    TeacherClassSession(
-      title: 'Sunday Morning Class',
-      minAge: 12,
-      maxAge: 16,
-      time: '9:00 AM',
-      studentCount: 14,
-      lessonTitle: 'Bible Study — Week 3',
-    ),
-    TeacherClassSession(
-      title: 'Sunday Afternoon Class',
-      minAge: 17,
-      maxAge: 24,
-      time: '11:00 AM',
-      studentCount: 14,
-      lessonTitle: 'The Life of Jesus',
-    ),
-  ];
-}

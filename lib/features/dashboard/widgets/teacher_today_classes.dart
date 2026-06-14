@@ -47,12 +47,44 @@ class TeacherTodayClasses extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        ...sessions.map(
-          (session) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: _ClassSessionCard(session: session),
+        if (sessions.isEmpty)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 28),
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.12),
+              ),
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.event_busy_outlined,
+                  size: 36,
+                  color: AppColors.text.withValues(alpha: 0.35),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  l10n.noClassesToday,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.text.withValues(alpha: 0.55),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          ...sessions.map(
+            (session) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _ClassSessionCard(session: session),
+            ),
           ),
-        ),
       ],
     );
   }

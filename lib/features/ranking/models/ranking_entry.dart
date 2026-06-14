@@ -1,5 +1,3 @@
-enum RankingLevel { classRank, branchRank, projectRank }
-
 class RankingEntry {
   const RankingEntry({
     required this.rank,
@@ -19,13 +17,11 @@ class StudentRankSummary {
     required this.studentName,
     required this.finalScore,
     required this.classRank,
-    required this.branchRank,
-    required this.projectRank,
+    this.attendancePercent = 0,
   });
 
   final String studentName;
   final double finalScore;
   final int classRank;
-  final int branchRank;
-  final int projectRank;
+  final int attendancePercent;
 }

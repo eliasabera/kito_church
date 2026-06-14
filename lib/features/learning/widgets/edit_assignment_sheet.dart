@@ -90,7 +90,7 @@ class _EditAssignmentSheetState extends State<_EditAssignmentSheet> {
     setState(() => _attachmentName = null);
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (_submitting) return;
 
     final l10n = AppLocalizations.of(context);
@@ -119,16 +119,25 @@ class _EditAssignmentSheetState extends State<_EditAssignmentSheet> {
 
     setState(() => _submitting = true);
 
-    TeacherAssessmentsStoreProvider.of(context).saveAssignment(
-      AssignmentContent(
-        lessonId: lessonId,
-        title: title,
-        instructions: instructions,
-        attachmentName: _attachmentName,
-      ),
-    );
+    try {
+      await TeacherAssessmentsStoreProvider.of(context).saveAssignment(
+        AssignmentContent(
+          lessonId: lessonId,
+          title: title,
+          instructions: instructions,
+          attachmentName: _attachmentName,
+        ),
+      );
 
-    widget.onSuccess(l10n.assessmentSaved);
+      if (!mounted) return;
+      widget.onSuccess(l10n.assessmentSaved);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.assessmentSaveFailed)),
+      );
+      setState(() => _submitting = false);
+    }
   }
 
   @override

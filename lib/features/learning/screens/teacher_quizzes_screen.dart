@@ -8,6 +8,7 @@ import 'package:kitoapp/features/learning/widgets/teacher_quizzes_summary_card.d
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/teacher_assessments_store_provider.dart';
+import 'package:kitoapp/shared/widgets/teacher_lessons_store_provider.dart';
 
 class TeacherQuizzesContent extends StatefulWidget {
   const TeacherQuizzesContent({super.key});
@@ -18,6 +19,16 @@ class TeacherQuizzesContent extends StatefulWidget {
 
 class _TeacherQuizzesContentState extends State<TeacherQuizzesContent> {
   TeacherAssessmentFilter _filter = TeacherAssessmentFilter.all;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await TeacherLessonsStoreProvider.of(context).loadFromSupabase();
+      if (!mounted) return;
+      await TeacherAssessmentsStoreProvider.of(context).loadFromSupabase();
+    });
+  }
 
   void _openEditor(TeacherQuiz quiz) {
     final store = TeacherAssessmentsStoreProvider.of(context);
@@ -37,6 +48,13 @@ class _TeacherQuizzesContentState extends State<TeacherQuizzesContent> {
     return ListenableBuilder(
       listenable: store,
       builder: (context, _) {
+        if (store.isLoading && store.quizzes.isEmpty) {
+          return const ColoredBox(
+            color: AppColors.background,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         final summary = store.quizzesSummary;
         final quizzes = store.quizzesFor(_filter);
 

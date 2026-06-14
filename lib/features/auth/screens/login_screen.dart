@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kitoapp/core/enums/app_enums.dart';
 import 'package:kitoapp/core/router/app_router.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
+import 'package:kitoapp/features/admin/services/users_management_store.dart';
+import 'package:kitoapp/features/auth/services/auth_session.dart';
 import 'package:kitoapp/features/auth/widgets/auth_header.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/locale_notifier_provider.dart';
+import 'package:kitoapp/shared/widgets/notifications_store_provider.dart';
+import 'package:kitoapp/shared/widgets/password_text_field.dart';
+import 'package:kitoapp/shared/widgets/profile_store_provider.dart';
+import 'package:kitoapp/shared/widgets/users_management_store_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,10 +20,73 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  UserRole? _selectedRole;
+  bool _isLoading = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  void _loginAs(UserRole role) {
-    context.go(dashboardRouteForRole(role));
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.primary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  Future<void> _login() async {
+    final l10n = AppLocalizations.of(context);
+    final store = UsersManagementStoreProvider.of(context);
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage(l10n.pleaseEnterEmail);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      final response = await store.login(email, password);
+      if (!mounted) return;
+
+      switch (response.result) {
+        case LoginResult.success:
+          final user = response.user;
+          if (user == null) {
+            _showMessage(l10n.invalidCredentials);
+            return;
+          }
+          AuthSession.setSession(id: user.id, userRole: user.role);
+          await NotificationsStoreProvider.of(context).load();
+          if (!mounted) return;
+          await ProfileStoreProvider.of(context).load();
+          if (!mounted) return;
+          context.go(dashboardRouteForRole(user.role));
+        case LoginResult.invalidCredentials:
+          _showMessage(l10n.invalidCredentials);
+        case LoginResult.accountPending:
+          _showMessage(l10n.accountPendingApproval);
+        case LoginResult.accountRejected:
+          _showMessage(l10n.accountRejected);
+        case LoginResult.accountSuspended:
+          _showMessage(l10n.accountSuspended);
+        case LoginResult.emailAlreadyRegistered:
+          _showMessage(l10n.emailAlreadyRegistered);
+        case LoginResult.registrationFailed:
+          _showMessage(l10n.registrationFailed);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -33,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             AuthHeader(
-              title: l10n.appTitle,
+              title: l10n.authAppTitle,
               subtitle: l10n.appTagline,
               onToggleLanguage: localeNotifier.toggleLocale,
             ),
@@ -63,7 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 28),
                       TextField(
+                        controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
                         style: const TextStyle(color: AppColors.text),
                         decoration: InputDecoration(
                           labelText: l10n.email,
@@ -74,58 +144,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      TextField(
-                        obscureText: true,
-                        style: const TextStyle(color: AppColors.text),
-                        decoration: InputDecoration(
-                          labelText: l10n.password,
-                          prefixIcon: const Icon(
-                            Icons.lock_outline,
-                            color: AppColors.primary,
-                          ),
-                        ),
+                      PasswordTextField(
+                        controller: _passwordController,
+                        labelText: l10n.password,
                       ),
                       const SizedBox(height: 28),
                       FilledButton(
-                        onPressed: () =>
-                            _loginAs(_selectedRole ?? UserRole.student),
-                        child: Text(l10n.login),
-                      ),
-                      const SizedBox(height: 32),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              color: AppColors.primary.withValues(alpha: 0.25),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(
-                              l10n.selectRole,
-                              style: TextStyle(
-                                color: AppColors.text.withValues(alpha: 0.7),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              color: AppColors.primary.withValues(alpha: 0.25),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      _RoleSelector(
-                        studentLabel: l10n.student,
-                        teacherLabel: l10n.teacher,
-                        adminLabel: l10n.admin,
-                        selectedRole: _selectedRole,
-                        onRoleSelected: (role) {
-                          setState(() => _selectedRole = role);
-                        },
+                        onPressed: _isLoading ? null : _login,
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.background,
+                                ),
+                              )
+                            : Text(l10n.login),
                       ),
                       const SizedBox(height: 24),
                       Center(
@@ -146,114 +181,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RoleSelector extends StatelessWidget {
-  const _RoleSelector({
-    required this.studentLabel,
-    required this.teacherLabel,
-    required this.adminLabel,
-    required this.selectedRole,
-    required this.onRoleSelected,
-  });
-
-  final String studentLabel;
-  final String teacherLabel;
-  final String adminLabel;
-  final UserRole? selectedRole;
-  final ValueChanged<UserRole> onRoleSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _RoleChip(
-            label: studentLabel,
-            icon: Icons.school_outlined,
-            isSelected: selectedRole == UserRole.student,
-            onTap: () => onRoleSelected(UserRole.student),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _RoleChip(
-            label: teacherLabel,
-            icon: Icons.person_outline,
-            isSelected: selectedRole == UserRole.teacher,
-            onTap: () => onRoleSelected(UserRole.teacher),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _RoleChip(
-            label: adminLabel,
-            icon: Icons.admin_panel_settings_outlined,
-            isSelected: selectedRole == UserRole.admin,
-            onTap: () => onRoleSelected(UserRole.admin),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _RoleChip extends StatelessWidget {
-  const _RoleChip({
-    required this.label,
-    required this.icon,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: isSelected ? AppColors.primary : AppColors.background,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.primary,
-              width: isSelected ? 0 : 1.5,
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: 22,
-                color: isSelected ? AppColors.background : AppColors.primary,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: isSelected ? AppColors.background : AppColors.text,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

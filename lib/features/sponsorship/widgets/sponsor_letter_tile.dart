@@ -16,8 +16,8 @@ class SponsorLetterTile extends StatelessWidget {
     final dateLabel = DateFormat.yMMMd(locale).format(letter.date);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: letter.isNew
             ? AppColors.primary.withValues(alpha: 0.06)
@@ -29,78 +29,64 @@ class SponsorLetterTile extends StatelessWidget {
               : AppColors.primary.withValues(alpha: 0.12),
         ),
       ),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(
-              Icons.mail_outline,
-              color: AppColors.primary,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      dateLabel,
-                      style: TextStyle(
-                        color: AppColors.text.withValues(alpha: 0.5),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    if (letter.isNew) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          l10n.newLabel,
-                          style: const TextStyle(
-                            color: AppColors.background,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
+          Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  letter.preview,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                child: const Icon(
+                  Icons.mail_outline,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  dateLabel,
                   style: TextStyle(
-                    color: AppColors.text.withValues(alpha: 0.75),
-                    fontSize: 13,
-                    height: 1.4,
+                    color: AppColors.text.withValues(alpha: 0.5),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ],
-            ),
+              ),
+              if (letter.isNew)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    l10n.newLabel,
+                    style: const TextStyle(
+                      color: AppColors.background,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+            ],
           ),
-          const Icon(
-            Icons.chevron_right,
-            color: AppColors.primary,
-            size: 20,
+          const SizedBox(height: 12),
+          Text(
+            letter.body,
+            style: TextStyle(
+              color: AppColors.text.withValues(alpha: 0.85),
+              fontSize: 14,
+              height: 1.55,
+            ),
           ),
         ],
       ),

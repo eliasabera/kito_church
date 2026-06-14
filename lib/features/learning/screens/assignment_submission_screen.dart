@@ -5,6 +5,7 @@ import 'package:kitoapp/features/learning/data/student_learning_data.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/learning_progress_provider.dart';
+import 'package:kitoapp/shared/widgets/student_learning_catalog_provider.dart';
 
 class AssignmentSubmissionScreen extends StatefulWidget {
   const AssignmentSubmissionScreen({super.key, required this.itemId});
@@ -29,7 +30,10 @@ class _AssignmentSubmissionScreenState
 
   void _submit() {
     if (_answerController.text.trim().isEmpty) return;
-    LearningProgressProvider.of(context).completeAssignment(widget.itemId);
+    LearningProgressProvider.of(context).completeAssignmentWithAnswer(
+      widget.itemId,
+      _answerController.text,
+    );
     setState(() => _submitted = true);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -47,7 +51,9 @@ class _AssignmentSubmissionScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final item = StudentLearningData.findById(widget.itemId);
+    final catalog = StudentLearningCatalogProvider.of(context);
+    final item = catalog.findById(widget.itemId) ??
+        StudentLearningData.findById(widget.itemId);
 
     if (item == null) {
       return AppScaffold(
@@ -128,7 +134,7 @@ class _AssignmentSubmissionScreenState
             ],
             const SizedBox(height: 16),
             Text(
-              item.description ?? item.subtitle,
+              catalog.assignmentInstructionsFor(widget.itemId),
               style: TextStyle(
                 color: AppColors.text.withValues(alpha: 0.7),
                 fontSize: 14,

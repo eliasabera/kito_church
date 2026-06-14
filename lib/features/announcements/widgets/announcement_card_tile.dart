@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/features/announcements/models/announcement_item.dart';
+import 'package:kitoapp/features/announcements/widgets/announcement_category_style.dart';
+import 'package:kitoapp/features/announcements/services/announcement_document_launcher.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
+import 'package:kitoapp/shared/widgets/announcement_image.dart';
 
 class AnnouncementCardTile extends StatelessWidget {
   const AnnouncementCardTile({
     super.key,
     required this.item,
+    required this.categoryName,
     this.onTap,
   });
 
   final AnnouncementItem item;
+  final String categoryName;
   final VoidCallback? onTap;
 
   @override
@@ -49,7 +54,10 @@ class AnnouncementCardTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _CategoryIcon(category: item.category),
+              _CategoryIcon(
+                categoryId: item.categoryId,
+                categoryName: categoryName,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -98,6 +106,56 @@ class AnnouncementCardTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
+                    if (item.hasImage) ...[
+                      AnnouncementImage(item: item, height: 120),
+                      const SizedBox(height: 8),
+                    ],
+                    if (item.hasDocument) ...[
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => AnnouncementDocumentLauncher.openDocument(
+                            context,
+                            item,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  AnnouncementDocumentLauncher.iconFor(item),
+                                  size: 14,
+                                  color:
+                                      AppColors.primary.withValues(alpha: 0.75),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    item.documentName ?? l10n.readDocument,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: AppColors.primary
+                                          .withValues(alpha: 0.85),
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.visibility_outlined,
+                                  size: 12,
+                                  color:
+                                      AppColors.primary.withValues(alpha: 0.6),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
                     Text(
                       item.message,
                       maxLines: 2,
@@ -147,26 +205,18 @@ class AnnouncementCardTile extends StatelessWidget {
 }
 
 class _CategoryIcon extends StatelessWidget {
-  const _CategoryIcon({required this.category});
+  const _CategoryIcon({
+    required this.categoryId,
+    required this.categoryName,
+  });
 
-  final AnnouncementCategory category;
+  final String categoryId;
+  final String categoryName;
 
   @override
   Widget build(BuildContext context) {
-    final (icon, color) = switch (category) {
-      AnnouncementCategory.church => (
-          Icons.church_outlined,
-          AppColors.primary,
-        ),
-      AnnouncementCategory.events => (
-          Icons.event_outlined,
-          const Color(0xFF6A1B9A),
-        ),
-      AnnouncementCategory.academic => (
-          Icons.school_outlined,
-          const Color(0xFF2E7D32),
-        ),
-    };
+    final color = AnnouncementCategoryStyle.colorFor(categoryId);
+    final icon = AnnouncementCategoryStyle.iconFor(categoryId);
 
     return Container(
       width: 44,
@@ -235,6 +285,10 @@ void showAnnouncementDetailSheet(
                   ),
                 ),
                 const SizedBox(height: 16),
+                if (item.hasImage) ...[
+                  AnnouncementImage(item: item, height: 180, borderRadius: 14),
+                  const SizedBox(height: 16),
+                ],
                 Text(
                   item.message,
                   style: TextStyle(
@@ -243,6 +297,26 @@ void showAnnouncementDetailSheet(
                     height: 1.6,
                   ),
                 ),
+                if (item.hasDocument) ...[
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () =>
+                          AnnouncementDocumentLauncher.openDocument(context, item),
+                      icon: Icon(AnnouncementDocumentLauncher.iconFor(item)),
+                      label: Text(l10n.readDocument),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.background,
+                        minimumSize: const Size.fromHeight(48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           );

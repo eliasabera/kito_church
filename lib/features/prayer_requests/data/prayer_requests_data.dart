@@ -25,6 +25,7 @@ class PrayerRequestsData {
         ),
         PrayerRequest(
           id: 'p2',
+          authorId: 'u1',
           authorName: 'Abel Tesfaye',
           message:
               'Pray for wisdom as I prepare for the end-of-term Bible memory quiz.',

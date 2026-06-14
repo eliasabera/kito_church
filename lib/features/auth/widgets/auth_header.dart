@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kitoapp/core/constants/app_assets.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 
@@ -48,17 +49,29 @@ class AuthHeader extends StatelessWidget {
             ],
           ),
           Container(
-            width: 80,
-            height: 80,
+            width: 88,
+            height: 88,
             decoration: BoxDecoration(
               color: AppColors.background,
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(20),
               border: Border.all(color: AppColors.background, width: 3),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.12),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.church_outlined,
-              size: 40,
-              color: AppColors.primary,
+            clipBehavior: Clip.antiAlias,
+            child: Image.asset(
+              AppAssets.logo,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Icon(
+                Icons.church_outlined,
+                size: 40,
+                color: AppColors.primary,
+              ),
             ),
           ),
           const SizedBox(height: 16),

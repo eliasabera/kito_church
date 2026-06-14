@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'KGC Connect'**
   String get appTitle;
 
+  /// No description provided for @authAppTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'KGC Connect ET-221'**
+  String get authAppTitle;
+
   /// No description provided for @login.
   ///
   /// In en, this message translates to:
@@ -133,6 +139,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password'**
   String get password;
+
+  /// No description provided for @pleaseEnterEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get pleaseEnterEmail;
+
+  /// No description provided for @pleaseEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a password'**
+  String get pleaseEnterPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get invalidEmail;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotifications;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password'**
+  String get invalidCredentials;
+
+  /// No description provided for @accountPendingApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account is pending admin approval'**
+  String get accountPendingApproval;
+
+  /// No description provided for @accountRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Your registration was not approved'**
+  String get accountRejected;
+
+  /// No description provided for @accountSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been suspended'**
+  String get accountSuspended;
+
+  /// No description provided for @emailAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered'**
+  String get emailAlreadyRegistered;
+
+  /// No description provided for @registrationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration failed. Please try again.'**
+  String get registrationFailed;
+
+  /// No description provided for @pleaseEnterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your full name'**
+  String get pleaseEnterFullName;
+
+  /// No description provided for @registrationSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration submitted. An admin will review your account.'**
+  String get registrationSubmitted;
+
+  /// No description provided for @registrationPendingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit your details. An admin must approve your account before you can sign in.'**
+  String get registrationPendingHint;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
 
   /// No description provided for @student.
   ///
@@ -284,11 +398,11 @@ abstract class AppLocalizations {
   /// **'Date of Birth'**
   String get dateOfBirth;
 
-  /// No description provided for @grade.
+  /// No description provided for @university.
   ///
   /// In en, this message translates to:
-  /// **'Grade'**
-  String get grade;
+  /// **'University Name'**
+  String get university;
 
   /// No description provided for @phoneNumber.
   ///
@@ -416,6 +530,12 @@ abstract class AppLocalizations {
   /// **'Today\'s Classes'**
   String get todaysClasses;
 
+  /// No description provided for @noClassesToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No classes scheduled for today'**
+  String get noClassesToday;
+
   /// No description provided for @totalStudents.
   ///
   /// In en, this message translates to:
@@ -485,8 +605,20 @@ abstract class AppLocalizations {
   /// No description provided for @selectCompassionId.
   ///
   /// In en, this message translates to:
-  /// **'Select Compassion ID'**
+  /// **'Enter your Compassion ID'**
   String get selectCompassionId;
+
+  /// No description provided for @compassionIdSuffixHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your ID number'**
+  String get compassionIdSuffixHint;
+
+  /// No description provided for @phoneSuffixHint.
+  ///
+  /// In en, this message translates to:
+  /// **'XXXXXXXX'**
+  String get phoneSuffixHint;
 
   /// No description provided for @noCompassionIdsAvailable.
   ///
@@ -497,7 +629,7 @@ abstract class AppLocalizations {
   /// No description provided for @pleaseSelectCompassionId.
   ///
   /// In en, this message translates to:
-  /// **'Please select your Compassion ID'**
+  /// **'Please enter your Compassion ID'**
   String get pleaseSelectCompassionId;
 
   /// No description provided for @menuMain.
@@ -1094,6 +1226,18 @@ abstract class AppLocalizations {
   /// **'Prayer request submitted'**
   String get prayerRequestSubmitted;
 
+  /// No description provided for @prayerRequestSubmitFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit prayer request. Please try again.'**
+  String get prayerRequestSubmitFailed;
+
+  /// No description provided for @commentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to post comment. Please try again.'**
+  String get commentFailed;
+
   /// No description provided for @enterPrayerRequest.
   ///
   /// In en, this message translates to:
@@ -1301,7 +1445,7 @@ abstract class AppLocalizations {
   /// No description provided for @learningPathHint.
   ///
   /// In en, this message translates to:
-  /// **'Lessons post on Saturday — complete the lesson and assessment before the deadline to mark Sunday attendance'**
+  /// **'Complete each week\'s lesson and assessment before the deadline to mark weekly attendance'**
   String get learningPathHint;
 
   /// No description provided for @weekNumber.
@@ -1409,7 +1553,7 @@ abstract class AppLocalizations {
   /// No description provided for @attendanceHeatmapHint.
   ///
   /// In en, this message translates to:
-  /// **'Each block is a Sunday class. Finish the lesson and assessment before the deadline to mark online attendance.'**
+  /// **'Each block is a weekly session. Complete the lesson and assessment before the deadline to mark online attendance.'**
   String get attendanceHeatmapHint;
 
   /// No description provided for @heatmapPresent.
@@ -1711,6 +1855,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lesson saved as draft'**
   String get lessonSavedAsDraft;
+
+  /// No description provided for @lessonSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save lesson. Please try again.'**
+  String get lessonSaveFailed;
+
+  /// No description provided for @editLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Lesson'**
+  String get editLesson;
+
+  /// No description provided for @lessonUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson updated successfully'**
+  String get lessonUpdated;
+
+  /// No description provided for @lessonUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update lesson. Please try again.'**
+  String get lessonUpdateFailed;
 
   /// No description provided for @postedOn.
   ///
@@ -2084,6 +2252,18 @@ abstract class AppLocalizations {
   /// **'Add at least one complete question with all options filled'**
   String get quizQuestionsInvalid;
 
+  /// No description provided for @questionTextRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter question {number}'**
+  String questionTextRequired(int number);
+
+  /// No description provided for @optionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter option {option} for question {question}'**
+  String optionRequired(int question, int option);
+
   /// No description provided for @saveAssessment.
   ///
   /// In en, this message translates to:
@@ -2095,6 +2275,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Assessment saved successfully'**
   String get assessmentSaved;
+
+  /// No description provided for @assessmentSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save assessment. Please try again.'**
+  String get assessmentSaveFailed;
 
   /// No description provided for @needsSetup.
   ///
@@ -2167,6 +2353,1248 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Students submit prayer requests. View them here and join in prayer with likes and comments.'**
   String get teacherPrayerViewHint;
+
+  /// No description provided for @addUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Add User'**
+  String get addUser;
+
+  /// No description provided for @editUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit User'**
+  String get editUser;
+
+  /// No description provided for @deleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete User'**
+  String get deleteUser;
+
+  /// No description provided for @suspendUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspend'**
+  String get suspendUser;
+
+  /// No description provided for @reactivateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Reactivate'**
+  String get reactivateUser;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @suspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get suspended;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @confirmDeleteUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this user? This action cannot be undone.'**
+  String get confirmDeleteUser;
+
+  /// No description provided for @userAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'User added successfully'**
+  String get userAdded;
+
+  /// No description provided for @userUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated successfully'**
+  String get userUpdated;
+
+  /// No description provided for @userDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'User deleted'**
+  String get userDeleted;
+
+  /// No description provided for @userSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'User suspended'**
+  String get userSuspended;
+
+  /// No description provided for @userReactivated.
+  ///
+  /// In en, this message translates to:
+  /// **'User reactivated'**
+  String get userReactivated;
+
+  /// No description provided for @userApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'User approved'**
+  String get userApproved;
+
+  /// No description provided for @userRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'User rejected'**
+  String get userRejected;
+
+  /// No description provided for @noUsersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get noUsersFound;
+
+  /// No description provided for @userManagementOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'User Overview'**
+  String get userManagementOverview;
+
+  /// No description provided for @searchUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search users...'**
+  String get searchUsers;
+
+  /// No description provided for @joinedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined'**
+  String get joinedOn;
+
+  /// No description provided for @totalUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Users'**
+  String get totalUsers;
+
+  /// No description provided for @activeUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get activeUsers;
+
+  /// No description provided for @suspendedUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get suspendedUsers;
+
+  /// No description provided for @allUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'All Users'**
+  String get allUsers;
+
+  /// No description provided for @userFormRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter name and email'**
+  String get userFormRequired;
+
+  /// No description provided for @reportsOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports Overview'**
+  String get reportsOverview;
+
+  /// No description provided for @platformInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Insights'**
+  String get platformInsights;
+
+  /// No description provided for @reportsHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics for ET-221 Compassion project university students'**
+  String get reportsHeroSubtitle;
+
+  /// No description provided for @avgAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Attendance'**
+  String get avgAttendance;
+
+  /// No description provided for @avgScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Score'**
+  String get avgScore;
+
+  /// No description provided for @completionRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Rate'**
+  String get completionRate;
+
+  /// No description provided for @activeStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Students'**
+  String get activeStudents;
+
+  /// No description provided for @lessonsPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons Published'**
+  String get lessonsPublished;
+
+  /// No description provided for @keyMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'Key Metrics'**
+  String get keyMetrics;
+
+  /// No description provided for @generateReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate PDF Report'**
+  String get generateReport;
+
+  /// No description provided for @generatingReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating report...'**
+  String get generatingReport;
+
+  /// No description provided for @reportGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'Report PDF ready to save or share'**
+  String get reportGenerated;
+
+  /// No description provided for @reportGenerateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate report'**
+  String get reportGenerateFailed;
+
+  /// No description provided for @reportPdfTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'KGC Connect Platform Report'**
+  String get reportPdfTitle;
+
+  /// No description provided for @generatedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated on'**
+  String get generatedOn;
+
+  /// No description provided for @rank.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get rank;
+
+  /// No description provided for @settingsHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your account, preferences, and platform notifications'**
+  String get settingsHeroSubtitle;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @platformSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Settings'**
+  String get platformSettings;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @emailAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Alerts'**
+  String get emailAlerts;
+
+  /// No description provided for @pendingApprovalAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approval Alerts'**
+  String get pendingApprovalAlerts;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutApp;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'App Version'**
+  String get appVersion;
+
+  /// No description provided for @scoringHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set virtual learning weights for university and college students'**
+  String get scoringHeroSubtitle;
+
+  /// No description provided for @scoringOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Scoring Overview'**
+  String get scoringOverview;
+
+  /// No description provided for @totalWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Weight'**
+  String get totalWeight;
+
+  /// No description provided for @weightMustEqual100.
+  ///
+  /// In en, this message translates to:
+  /// **'Must equal 100%'**
+  String get weightMustEqual100;
+
+  /// No description provided for @validWeights.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid'**
+  String get validWeights;
+
+  /// No description provided for @adjustWeights.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust Weights'**
+  String get adjustWeights;
+
+  /// No description provided for @scoringWeightsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance, quizzes, and assignments must total 100% before saving.'**
+  String get scoringWeightsHint;
+
+  /// No description provided for @scoringAttendanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Online and virtual class attendance'**
+  String get scoringAttendanceHint;
+
+  /// No description provided for @scoringQuizHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly quiz performance'**
+  String get scoringQuizHint;
+
+  /// No description provided for @scoringAssignmentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted coursework and assignments'**
+  String get scoringAssignmentHint;
+
+  /// No description provided for @resetToDefaults.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Defaults'**
+  String get resetToDefaults;
+
+  /// No description provided for @scoringSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Scoring configuration saved'**
+  String get scoringSaved;
+
+  /// No description provided for @uploadVerseHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule and publish daily Bible verses for students'**
+  String get uploadVerseHeroSubtitle;
+
+  /// No description provided for @verseText.
+  ///
+  /// In en, this message translates to:
+  /// **'Verse Text'**
+  String get verseText;
+
+  /// No description provided for @scheduleDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Date'**
+  String get scheduleDate;
+
+  /// No description provided for @verseUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Verse uploaded successfully'**
+  String get verseUploaded;
+
+  /// No description provided for @verseFormRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter verse text, reference, and date'**
+  String get verseFormRequired;
+
+  /// No description provided for @attachVerseImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach Image'**
+  String get attachVerseImage;
+
+  /// No description provided for @attachVerseImageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional image to display with this verse'**
+  String get attachVerseImageHint;
+
+  /// No description provided for @changeVerseImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Image'**
+  String get changeVerseImage;
+
+  /// No description provided for @sponsorshipHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student & Sponsor Links'**
+  String get sponsorshipHeroTitle;
+
+  /// No description provided for @sponsorshipHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign sponsors to students and update links when sponsors change'**
+  String get sponsorshipHeroSubtitle;
+
+  /// No description provided for @sponsorshipOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsorship Overview'**
+  String get sponsorshipOverview;
+
+  /// No description provided for @studentsWithSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'students with sponsor'**
+  String get studentsWithSponsor;
+
+  /// No description provided for @unlinkedStudents.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlinked'**
+  String get unlinkedStudents;
+
+  /// No description provided for @totalSponsors.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsors'**
+  String get totalSponsors;
+
+  /// No description provided for @availableSponsors.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get availableSponsors;
+
+  /// No description provided for @withSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'With Sponsor'**
+  String get withSponsor;
+
+  /// No description provided for @withoutSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Without Sponsor'**
+  String get withoutSponsor;
+
+  /// No description provided for @noSponsorAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'No sponsor assigned'**
+  String get noSponsorAssigned;
+
+  /// No description provided for @studentSponsorLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Student–Sponsor Links'**
+  String get studentSponsorLinks;
+
+  /// No description provided for @searchStudentsOrSponsors.
+  ///
+  /// In en, this message translates to:
+  /// **'Search students or sponsors'**
+  String get searchStudentsOrSponsors;
+
+  /// No description provided for @noStudentsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No students found'**
+  String get noStudentsFound;
+
+  /// No description provided for @assignSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign Sponsor'**
+  String get assignSponsor;
+
+  /// No description provided for @changeSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Sponsor'**
+  String get changeSponsor;
+
+  /// No description provided for @removeSponsorLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Sponsor Link'**
+  String get removeSponsorLink;
+
+  /// No description provided for @currentSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Current sponsor'**
+  String get currentSponsor;
+
+  /// No description provided for @selectSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Sponsor'**
+  String get selectSponsor;
+
+  /// No description provided for @selectSponsorFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a sponsor for {studentName}'**
+  String selectSponsorFor(String studentName);
+
+  /// No description provided for @noAvailableSponsors.
+  ///
+  /// In en, this message translates to:
+  /// **'No sponsors available. Add a sponsor first.'**
+  String get noAvailableSponsors;
+
+  /// No description provided for @addSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Sponsor'**
+  String get addSponsor;
+
+  /// No description provided for @sponsorAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsor assigned successfully'**
+  String get sponsorAssigned;
+
+  /// No description provided for @sponsorAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsor added successfully'**
+  String get sponsorAdded;
+
+  /// No description provided for @sponsorLinkRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsor link removed'**
+  String get sponsorLinkRemoved;
+
+  /// No description provided for @linkedSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked since {date}'**
+  String linkedSince(String date);
+
+  /// No description provided for @giftsHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Announcements'**
+  String get giftsHeroTitle;
+
+  /// No description provided for @giftsHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record gifts from sponsors and notify sponsored students'**
+  String get giftsHeroSubtitle;
+
+  /// No description provided for @toAnnounce.
+  ///
+  /// In en, this message translates to:
+  /// **'to announce'**
+  String get toAnnounce;
+
+  /// No description provided for @announced.
+  ///
+  /// In en, this message translates to:
+  /// **'Announced'**
+  String get announced;
+
+  /// No description provided for @awaitingAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Awaiting'**
+  String get awaitingAnnouncement;
+
+  /// No description provided for @announceGift.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce to Student'**
+  String get announceGift;
+
+  /// No description provided for @giftAnnounced.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift announced to student'**
+  String get giftAnnounced;
+
+  /// No description provided for @recordGift.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Gift'**
+  String get recordGift;
+
+  /// No description provided for @recordGiftHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Log a gift sent by a sponsor for a sponsored student'**
+  String get recordGiftHint;
+
+  /// No description provided for @selectStudent.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Student'**
+  String get selectStudent;
+
+  /// No description provided for @giftTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Title'**
+  String get giftTitle;
+
+  /// No description provided for @giftDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Description'**
+  String get giftDescription;
+
+  /// No description provided for @giftType.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Type'**
+  String get giftType;
+
+  /// No description provided for @giftRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift recorded successfully'**
+  String get giftRecorded;
+
+  /// No description provided for @searchGifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Search gifts, students, or sponsors'**
+  String get searchGifts;
+
+  /// No description provided for @noSponsoredStudentsForGifts.
+  ///
+  /// In en, this message translates to:
+  /// **'No sponsored students. Assign sponsors first.'**
+  String get noSponsoredStudentsForGifts;
+
+  /// No description provided for @emailOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Email (optional)'**
+  String get emailOptional;
+
+  /// No description provided for @announcementsHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify Students'**
+  String get announcementsHeroTitle;
+
+  /// No description provided for @announcementsHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and publish announcements for all students'**
+  String get announcementsHeroSubtitle;
+
+  /// No description provided for @publishedAnnouncements.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get publishedAnnouncements;
+
+  /// No description provided for @withImage.
+  ///
+  /// In en, this message translates to:
+  /// **'With Image'**
+  String get withImage;
+
+  /// No description provided for @studentsNotified.
+  ///
+  /// In en, this message translates to:
+  /// **'Notified'**
+  String get studentsNotified;
+
+  /// No description provided for @createAnnouncementHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish an announcement and students will be notified immediately'**
+  String get createAnnouncementHint;
+
+  /// No description provided for @announcementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get announcementTitle;
+
+  /// No description provided for @announcementMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get announcementMessage;
+
+  /// No description provided for @announcementCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get announcementCategory;
+
+  /// No description provided for @attachAnnouncementImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach Image'**
+  String get attachAnnouncementImage;
+
+  /// No description provided for @attachAnnouncementImageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional image to include with this announcement'**
+  String get attachAnnouncementImageHint;
+
+  /// No description provided for @attachAnnouncementDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach Document'**
+  String get attachAnnouncementDocument;
+
+  /// No description provided for @attachAnnouncementDocumentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional PDF or Word file. Saved to Supabase Storage for students and teachers to read.'**
+  String get attachAnnouncementDocumentHint;
+
+  /// No description provided for @documentAttachedReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Document attached and ready to publish'**
+  String get documentAttachedReady;
+
+  /// No description provided for @publishingAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing...'**
+  String get publishingAnnouncement;
+
+  /// No description provided for @uploadingAnnouncementDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading document...'**
+  String get uploadingAnnouncementDocument;
+
+  /// No description provided for @readDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Read Document'**
+  String get readDocument;
+
+  /// No description provided for @documentOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the document. Please try again.'**
+  String get documentOpenFailed;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @withDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'With Document'**
+  String get withDocument;
+
+  /// No description provided for @publishAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish Announcement'**
+  String get publishAnnouncement;
+
+  /// No description provided for @announcementPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcement published and students notified'**
+  String get announcementPublished;
+
+  /// No description provided for @announcementUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcement updated successfully'**
+  String get announcementUpdated;
+
+  /// No description provided for @announcementUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update announcement. Please try again.'**
+  String get announcementUpdateFailed;
+
+  /// No description provided for @editAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Announcement'**
+  String get editAnnouncement;
+
+  /// No description provided for @editAnnouncementHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Update the announcement details below'**
+  String get editAnnouncementHint;
+
+  /// No description provided for @saveAnnouncementChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveAnnouncementChanges;
+
+  /// No description provided for @savingAnnouncementChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving changes...'**
+  String get savingAnnouncementChanges;
+
+  /// No description provided for @removeAnnouncementImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove image'**
+  String get removeAnnouncementImage;
+
+  /// No description provided for @removeAnnouncementDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove document'**
+  String get removeAnnouncementDocument;
+
+  /// No description provided for @announcementPublishFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to publish announcement. Please try again.'**
+  String get announcementPublishFailed;
+
+  /// No description provided for @announcementDocumentUploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not upload the document. Please check your connection and try again.'**
+  String get announcementDocumentUploadFailed;
+
+  /// No description provided for @categoryAddFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add category. Please try again.'**
+  String get categoryAddFailed;
+
+  /// No description provided for @searchAnnouncements.
+  ///
+  /// In en, this message translates to:
+  /// **'Search announcements'**
+  String get searchAnnouncements;
+
+  /// No description provided for @deleteAnnouncement.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Announcement'**
+  String get deleteAnnouncement;
+
+  /// No description provided for @deleteAnnouncementConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this announcement?'**
+  String get deleteAnnouncementConfirm;
+
+  /// No description provided for @announcementDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcement deleted'**
+  String get announcementDeleted;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @newCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'New category name'**
+  String get newCategoryName;
+
+  /// No description provided for @categoryAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Category added'**
+  String get categoryAdded;
+
+  /// No description provided for @deleteCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Category'**
+  String get deleteCategory;
+
+  /// No description provided for @deleteCategoryConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete category \"{name}\"?'**
+  String deleteCategoryConfirm(String name);
+
+  /// No description provided for @categoryDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Category deleted'**
+  String get categoryDeleted;
+
+  /// No description provided for @categoryDeleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete category. Please try again.'**
+  String get categoryDeleteFailed;
+
+  /// No description provided for @categoryDeleteInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete a category that has announcements.'**
+  String get categoryDeleteInUse;
+
+  /// No description provided for @categoryDeleteLastOne.
+  ///
+  /// In en, this message translates to:
+  /// **'At least one category is required.'**
+  String get categoryDeleteLastOne;
+
+  /// No description provided for @postedByDefaultHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Defaults to your account name'**
+  String get postedByDefaultHint;
+
+  /// No description provided for @selectCategoryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add or select a category first'**
+  String get selectCategoryFirst;
+
+  /// No description provided for @pleaseEnterAnnouncementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an announcement title'**
+  String get pleaseEnterAnnouncementTitle;
+
+  /// No description provided for @pleaseEnterAnnouncementMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the announcement message'**
+  String get pleaseEnterAnnouncementMessage;
+
+  /// No description provided for @pleaseEnterAuthorName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the author name'**
+  String get pleaseEnterAuthorName;
+
+  /// No description provided for @pleaseSelectAnnouncementCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a category'**
+  String get pleaseSelectAnnouncementCategory;
+
+  /// No description provided for @announcementTitleTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Title must be at least 3 characters'**
+  String get announcementTitleTooShort;
+
+  /// No description provided for @announcementTitleTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Title must be 120 characters or fewer'**
+  String get announcementTitleTooLong;
+
+  /// No description provided for @announcementMessageTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Message must be at least 10 characters'**
+  String get announcementMessageTooShort;
+
+  /// No description provided for @announcementMessageTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Message must be 5000 characters or fewer'**
+  String get announcementMessageTooLong;
+
+  /// No description provided for @authorNameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Author name must be at least 2 characters'**
+  String get authorNameTooShort;
+
+  /// No description provided for @authorNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Author name must be 80 characters or fewer'**
+  String get authorNameTooLong;
+
+  /// No description provided for @pleaseEnterCategoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a category name'**
+  String get pleaseEnterCategoryName;
+
+  /// No description provided for @categoryNameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name must be at least 2 characters'**
+  String get categoryNameTooShort;
+
+  /// No description provided for @categoryNameTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name must be 40 characters or fewer'**
+  String get categoryNameTooLong;
+
+  /// No description provided for @announcementDocumentTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Document must be 10 MB or smaller'**
+  String get announcementDocumentTooLarge;
+
+  /// No description provided for @announcementDocumentInvalidType.
+  ///
+  /// In en, this message translates to:
+  /// **'Only PDF, DOC, and DOCX files are allowed'**
+  String get announcementDocumentInvalidType;
+
+  /// No description provided for @addCategoryFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a category to publish announcements'**
+  String get addCategoryFirst;
+
+  /// No description provided for @customCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Your categories'**
+  String get customCategories;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categories;
+
+  /// No description provided for @et221CompassionProject.
+  ///
+  /// In en, this message translates to:
+  /// **'ET-221 Compassion'**
+  String get et221CompassionProject;
+
+  /// No description provided for @topPerformersEt221Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'ET-221 Compassion project students'**
+  String get topPerformersEt221Subtitle;
+
+  /// No description provided for @manageBibleStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Bible Stories'**
+  String get manageBibleStories;
+
+  /// No description provided for @bibleStoriesHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Student Home Stories'**
+  String get bibleStoriesHeroTitle;
+
+  /// No description provided for @bibleStoriesHeroSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add and edit Bible stories shown on the student home screen'**
+  String get bibleStoriesHeroSubtitle;
+
+  /// No description provided for @bibleStoriesOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Stories Overview'**
+  String get bibleStoriesOverview;
+
+  /// No description provided for @publishedStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Published stories'**
+  String get publishedStories;
+
+  /// No description provided for @totalStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Stories'**
+  String get totalStories;
+
+  /// No description provided for @allStories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Stories'**
+  String get allStories;
+
+  /// No description provided for @searchStories.
+  ///
+  /// In en, this message translates to:
+  /// **'Search stories'**
+  String get searchStories;
+
+  /// No description provided for @noStories.
+  ///
+  /// In en, this message translates to:
+  /// **'No stories found'**
+  String get noStories;
+
+  /// No description provided for @addBibleStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Story'**
+  String get addBibleStory;
+
+  /// No description provided for @editBibleStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Story'**
+  String get editBibleStory;
+
+  /// No description provided for @bibleStoryFormHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Stories appear in the swipe carousel on the student home screen'**
+  String get bibleStoryFormHint;
+
+  /// No description provided for @storyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Story Title'**
+  String get storyTitle;
+
+  /// No description provided for @storySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Story Summary'**
+  String get storySummary;
+
+  /// No description provided for @imageUrlOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Image URL (optional)'**
+  String get imageUrlOptional;
+
+  /// No description provided for @attachStoryImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Image'**
+  String get attachStoryImage;
+
+  /// No description provided for @deleteStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Story'**
+  String get deleteStory;
+
+  /// No description provided for @deleteStoryConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this story?'**
+  String get deleteStoryConfirm;
+
+  /// No description provided for @storyDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Story deleted'**
+  String get storyDeleted;
+
+  /// No description provided for @storyAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Story added'**
+  String get storyAdded;
+
+  /// No description provided for @storyUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Story updated'**
+  String get storyUpdated;
+
+  /// No description provided for @storyPublished.
+  ///
+  /// In en, this message translates to:
+  /// **'Story is now visible to students'**
+  String get storyPublished;
+
+  /// No description provided for @storyHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Story hidden from students'**
+  String get storyHidden;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @published.
+  ///
+  /// In en, this message translates to:
+  /// **'Published'**
+  String get published;
+
+  /// No description provided for @hidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get hidden;
+
+  /// No description provided for @showStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get showStory;
+
+  /// No description provided for @hideStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hideStory;
 }
 
 class _AppLocalizationsDelegate

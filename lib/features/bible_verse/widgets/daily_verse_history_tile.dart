@@ -8,10 +8,14 @@ class DailyVerseHistoryTile extends StatelessWidget {
     super.key,
     required this.verse,
     required this.onTap,
+    this.onEdit,
+    this.onDelete,
   });
 
   final BibleVerse verse;
   final VoidCallback onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +90,36 @@ class DailyVerseHistoryTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Icon(
-                  Icons.chevron_right,
-                  size: 20,
-                  color: AppColors.text.withValues(alpha: 0.3),
-                ),
+                if (onEdit != null || onDelete != null)
+                  PopupMenuButton<String>(
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 20,
+                      color: AppColors.text.withValues(alpha: 0.45),
+                    ),
+                    onSelected: (value) {
+                      if (value == 'edit') onEdit?.call();
+                      if (value == 'delete') onDelete?.call();
+                    },
+                    itemBuilder: (context) => [
+                      if (onEdit != null)
+                        const PopupMenuItem(
+                          value: 'edit',
+                          child: Text('Edit'),
+                        ),
+                      if (onDelete != null)
+                        const PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Delete'),
+                        ),
+                    ],
+                  )
+                else
+                  Icon(
+                    Icons.chevron_right,
+                    size: 20,
+                    color: AppColors.text.withValues(alpha: 0.3),
+                  ),
               ],
             ),
           ),

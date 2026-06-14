@@ -4,6 +4,7 @@ import 'package:kitoapp/core/router/app_router.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/daily_verse_store_provider.dart';
+import 'package:kitoapp/shared/widgets/verse_image.dart';
 
 class StudentDailyVerseCard extends StatelessWidget {
   const StudentDailyVerseCard({super.key});
@@ -12,14 +13,27 @@ class StudentDailyVerseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final store = DailyVerseStoreProvider.of(context);
-    final verse = store.todayVerse;
-
-    if (verse == null) return const SizedBox.shrink();
 
     return ListenableBuilder(
       listenable: store,
       builder: (context, _) {
-        final current = store.todayVerse!;
+        final current = store.todayVerse;
+        if (current == null) {
+          if (store.isLoading) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            );
+          }
+          return const SizedBox.shrink();
+        }
+
         return Material(
           color: Colors.transparent,
           child: InkWell(
@@ -48,16 +62,7 @@ class StudentDailyVerseCard extends StatelessWidget {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.network(
-                          'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=80',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const _VerseImageFallback(),
-                          loadingBuilder: (context, child, progress) {
-                            if (progress == null) return child;
-                            return const _VerseImageFallback();
-                          },
-                        ),
+                        VerseImage(verse: current),
                         Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -156,33 +161,6 @@ class StudentDailyVerseCard extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _VerseImageFallback extends StatelessWidget {
-  const _VerseImageFallback();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary,
-            AppColors.primary.withValues(alpha: 0.75),
-          ],
-        ),
-      ),
-      child: Center(
-        child: Icon(
-          Icons.auto_stories_outlined,
-          size: 56,
-          color: AppColors.background.withValues(alpha: 0.3),
-        ),
-      ),
     );
   }
 }

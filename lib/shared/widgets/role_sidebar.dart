@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kitoapp/core/constants/app_assets.dart';
 import 'package:kitoapp/core/enums/app_enums.dart';
 import 'package:kitoapp/core/router/app_router.dart';
 import 'package:kitoapp/core/router/role_sidebar_config.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
+import 'package:kitoapp/features/auth/services/auth_session.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 class RoleSidebar extends StatelessWidget {
   const RoleSidebar({
@@ -66,9 +68,10 @@ class RoleSidebar extends StatelessWidget {
                 child: Column(
                   children: [
                     FilledButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
+                        await AuthSession.signOut();
                         onNavigate?.call();
-                        context.go(AppRoutes.login);
+                        if (context.mounted) context.go(AppRoutes.login);
                       },
                       icon: const Icon(Icons.logout, size: 18),
                       label: Text(l10n.logout),
@@ -122,13 +125,29 @@ class _SidebarHeader extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.background.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.church_outlined,
                   color: AppColors.background,
-                  size: 26,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.background.withValues(alpha: 0.35),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset(
+                  AppAssets.logo,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.church_outlined,
+                    color: AppColors.primary,
+                    size: 26,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),

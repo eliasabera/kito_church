@@ -14,11 +14,27 @@ import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/attendance_store_provider.dart';
 
-class AttendanceContent extends StatelessWidget {
+class AttendanceContent extends StatefulWidget {
   const AttendanceContent({super.key});
 
+  @override
+  State<AttendanceContent> createState() => _AttendanceContentState();
+}
+
+class _AttendanceContentState extends State<AttendanceContent> {
   UserRole? _role(BuildContext context) {
     return roleFromPath(GoRouterState.of(context).uri.path);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final role = _role(context);
+      if (role == UserRole.student) {
+        AttendanceStoreProvider.of(context).loadFromSupabase();
+      }
+    });
   }
 
   @override
@@ -38,6 +54,7 @@ class _StudentAttendanceContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final store = AttendanceStoreProvider.of(context);
     final isStudent = role == UserRole.student;
 
@@ -50,29 +67,64 @@ class _StudentAttendanceContent extends StatelessWidget {
 
         return ColoredBox(
           color: AppColors.primary.withValues(alpha: 0.03),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: AttendanceSummaryCard(summary: summary),
-                ),
-                if (isStudent && pending.isNotEmpty)
-                  PendingMakeupBanner(sessions: pending),
-                AttendanceStatsBar(summary: summary),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: AttendanceHeatmap(
-                    cells: store.heatmapCells,
-                    onCellTap: isStudent
-                        ? (cell) => _onHeatmapCellTap(context, cell)
-                        : null,
+          child: RefreshIndicator(
+            color: AppColors.primary,
+            onRefresh: store.loadFromSupabase,
+            child: store.isLoading && store.sessions.isEmpty
+                ? ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: const [
+                      SizedBox(height: 120),
+                      Center(
+                        child: SizedBox(
+                          width: 28,
+                          height: 28,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    ],
+                  )
+                : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                          child: AttendanceSummaryCard(summary: summary),
+                        ),
+                        if (isStudent && pending.isNotEmpty)
+                          PendingMakeupBanner(sessions: pending),
+                        AttendanceStatsBar(summary: summary),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: store.heatmapCells.isEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 24,
+                                  ),
+                                  child: Text(
+                                    l10n.noAttendanceRecords,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.text
+                                          .withValues(alpha: 0.5),
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                )
+                              : AttendanceHeatmap(
+                                  cells: store.heatmapCells,
+                                  onCellTap: isStudent
+                                      ? (cell) =>
+                                          _onHeatmapCellTap(context, cell)
+                                      : null,
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
           ),
         );
       },
@@ -83,7 +135,7 @@ class _StudentAttendanceContent extends StatelessWidget {
     if (cell.status != WeekAttendanceStatus.pending || cell.sessionId == null) {
       return;
     }
-    context.go(StudentRoutes.learning);
+    context.push(StudentRoutes.makeupAttendance(cell.sessionId!));
   }
 }
 

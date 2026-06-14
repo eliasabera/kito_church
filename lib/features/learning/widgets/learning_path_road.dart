@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kitoapp/core/router/app_router.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
-import 'package:kitoapp/features/learning/data/student_learning_data.dart';
 import 'package:kitoapp/features/learning/models/lesson_unit.dart';
 import 'package:kitoapp/features/learning/services/learning_progress_store.dart';
 import 'package:kitoapp/features/learning/widgets/learning_path_node.dart';
@@ -16,7 +15,7 @@ class LearningPathRoad extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final store = LearningProgressProvider.of(context);
-    final weeks = StudentLearningData.weeks;
+    final weeks = store.weeks;
 
     return ListenableBuilder(
       listenable: store,
@@ -30,14 +29,6 @@ class LearningPathRoad extends StatelessWidget {
                 color: AppColors.text,
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              l10n.learningPathHint,
-              style: TextStyle(
-                color: AppColors.text.withValues(alpha: 0.5),
-                fontSize: 12,
               ),
             ),
             const SizedBox(height: 16),

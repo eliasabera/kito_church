@@ -6,6 +6,7 @@ import 'package:kitoapp/features/learning/models/quiz_question.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/learning_progress_provider.dart';
+import 'package:kitoapp/shared/widgets/student_learning_catalog_provider.dart';
 
 class QuizPracticeScreen extends StatefulWidget {
   const QuizPracticeScreen({super.key, required this.itemId});
@@ -22,15 +23,17 @@ class _QuizPracticeScreenState extends State<QuizPracticeScreen> {
   final List<int?> _answers = [];
   bool _showResult = false;
 
-  List<QuizQuestion> get _questions =>
-      StudentLearningData.quizQuestionsFor(widget.itemId);
+  List<QuizQuestion> _questions(BuildContext context) {
+    final catalog = StudentLearningCatalogProvider.of(context);
+    return catalog.quizQuestionsFor(widget.itemId);
+  }
 
   void _selectOption(int index) {
     setState(() => _selectedOption = index);
   }
 
   void _next() {
-    final questions = _questions;
+    final questions = _questions(context);
     if (_selectedOption == null) return;
 
     _answers.add(_selectedOption);
@@ -44,10 +47,10 @@ class _QuizPracticeScreenState extends State<QuizPracticeScreen> {
     }
   }
 
-  int get _score {
+  int _scoreFor(List<QuizQuestion> questions) {
     var correct = 0;
     for (var i = 0; i < _answers.length; i++) {
-      if (_answers[i] == _questions[i].correctIndex) correct++;
+      if (_answers[i] == questions[i].correctIndex) correct++;
     }
     return correct;
   }
@@ -55,8 +58,10 @@ class _QuizPracticeScreenState extends State<QuizPracticeScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final item = StudentLearningData.findById(widget.itemId);
-    final questions = _questions;
+    final catalog = StudentLearningCatalogProvider.of(context);
+    final item = catalog.findById(widget.itemId) ??
+        StudentLearningData.findById(widget.itemId);
+    final questions = _questions(context);
 
     if (item == null || questions.isEmpty) {
       return AppScaffold(
@@ -114,7 +119,7 @@ class _QuizPracticeScreenState extends State<QuizPracticeScreen> {
                     size: 64, color: AppColors.primary),
                 const SizedBox(height: 16),
                 Text(
-                  l10n.quizScore(_score, questions.length),
+                  l10n.quizScore(_scoreFor(questions), questions.length),
                   style: const TextStyle(
                     color: AppColors.text,
                     fontSize: 22,

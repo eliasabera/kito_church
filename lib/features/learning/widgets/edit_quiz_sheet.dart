@@ -90,7 +90,7 @@ class _EditQuizSheetState extends State<_EditQuizSheet> {
     setState(() => _questions.removeAt(index));
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (_submitting) return;
 
     final l10n = AppLocalizations.of(context);
@@ -110,24 +110,51 @@ class _EditQuizSheetState extends State<_EditQuizSheet> {
       return;
     }
 
-    if (_questions.isEmpty || !_questions.every((q) => q.isValid)) {
+    if (_questions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.quizQuestionsInvalid)),
       );
       return;
     }
 
+    for (var i = 0; i < _questions.length; i++) {
+      final question = _questions[i];
+      if (question.question.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.questionTextRequired(i + 1))),
+        );
+        return;
+      }
+      for (var j = 0; j < question.options.length; j++) {
+        if (question.options[j].trim().isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.optionRequired(i + 1, j + 1))),
+          );
+          return;
+        }
+      }
+    }
+
     setState(() => _submitting = true);
 
-    TeacherAssessmentsStoreProvider.of(context).saveQuiz(
-      QuizContent(
-        lessonId: lessonId,
-        title: title,
-        questions: _questions.map((q) => q.toQuestion()).toList(),
-      ),
-    );
+    try {
+      await TeacherAssessmentsStoreProvider.of(context).saveQuiz(
+        QuizContent(
+          lessonId: lessonId,
+          title: title,
+          questions: _questions.map((question) => question.toQuestion()).toList(),
+        ),
+      );
 
-    widget.onSuccess(l10n.assessmentSaved);
+      if (!mounted) return;
+      widget.onSuccess(l10n.assessmentSaved);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.assessmentSaveFailed)),
+      );
+      setState(() => _submitting = false);
+    }
   }
 
   @override
@@ -374,42 +401,48 @@ class _QuestionCardState extends State<_QuestionCard> {
             ),
           ),
           const SizedBox(height: 10),
-          for (var i = 0; i < widget.draft.options.length; i++) ...[
-            Row(
-              children: [
-                Radio<int>(
-                  value: i,
-                  groupValue: widget.draft.correctIndex,
-                  activeColor: AppColors.primary,
-                  onChanged: widget.enabled
-                      ? (value) {
-                          if (value != null) {
-                            setState(() => widget.draft.correctIndex = value);
-                            widget.onChanged();
+          for (var i = 0; i < widget.draft.options.length; i++)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Radio<int>(
+                    value: i,
+                    groupValue: widget.draft.correctIndex,
+                    activeColor: AppColors.primary,
+                    onChanged: widget.enabled
+                        ? (value) {
+                            if (value != null) {
+                              setState(() => widget.draft.correctIndex = value);
+                              widget.onChanged();
+                            }
                           }
-                        }
-                      : null,
-                ),
-                Expanded(
-                  child: TextField(
-                    enabled: widget.enabled,
-                    controller: _optionControllers[i],
-                    onChanged: (value) {
-                      widget.draft.options[i] = value;
-                      widget.onChanged();
-                    },
-                    decoration: InputDecoration(
-                      labelText: l10n.optionLabel(i + 1),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        : null,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      enabled: widget.enabled,
+                      controller: _optionControllers[i],
+                      onChanged: (value) {
+                        widget.draft.options[i] = value;
+                        widget.onChanged();
+                      },
+                      decoration: InputDecoration(
+                        labelText: l10n.optionLabel(i + 1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 12,
+                        ),
                       ),
-                      isDense: true,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ],
           const SizedBox(height: 4),
           Text(
             l10n.correctAnswerHint,

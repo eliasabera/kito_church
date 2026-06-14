@@ -8,8 +8,21 @@ import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/daily_verse_store_provider.dart';
 
-class DailyVerseContent extends StatelessWidget {
+class DailyVerseContent extends StatefulWidget {
   const DailyVerseContent({super.key});
+
+  @override
+  State<DailyVerseContent> createState() => _DailyVerseContentState();
+}
+
+class _DailyVerseContentState extends State<DailyVerseContent> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DailyVerseStoreProvider.of(context).load();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +32,24 @@ class DailyVerseContent extends StatelessWidget {
     return ListenableBuilder(
       listenable: store,
       builder: (context, _) {
+        if (store.isLoading && store.allVerses.isEmpty) {
+          return const ColoredBox(
+            color: AppColors.background,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         final today = store.todayVerse;
         final previous = store.previousVerses;
 
         return ColoredBox(
           color: AppColors.primary.withValues(alpha: 0.03),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: Column(
+          child: RefreshIndicator(
+            onRefresh: store.load,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 24),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
@@ -107,7 +130,8 @@ class DailyVerseContent extends StatelessWidget {
               ],
             ),
           ),
-        );
+        ),
+      );
       },
     );
   }

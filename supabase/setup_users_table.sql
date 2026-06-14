@@ -1,0 +1,1 @@
+-- DEPRECATED: use setup_users_and_profiles.sql instead.

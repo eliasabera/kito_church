@@ -46,6 +46,12 @@ List<RoleSidebarItem> roleSidebarItems(UserRole role, AppLocalizations l10n) {
         section: l10n.sidebarCompassion,
       ),
       RoleSidebarItem(
+        label: l10n.notifications,
+        icon: Icons.notifications_outlined,
+        route: StudentRoutes.notifications,
+        section: l10n.sidebarCommunity,
+      ),
+      RoleSidebarItem(
         label: l10n.announcements,
         icon: Icons.campaign_outlined,
         route: StudentRoutes.announcements,
@@ -92,15 +98,15 @@ List<RoleSidebarItem> roleSidebarItems(UserRole role, AppLocalizations l10n) {
     ],
     UserRole.admin => [
       RoleSidebarItem(
-        label: l10n.scoringSystem,
-        icon: Icons.tune_outlined,
-        route: AdminRoutes.scoring,
-        section: l10n.sidebarAdminTools,
-      ),
-      RoleSidebarItem(
         label: l10n.uploadVerse,
         icon: Icons.menu_book_outlined,
         route: AdminRoutes.dailyVerse,
+        section: l10n.sidebarAdminTools,
+      ),
+      RoleSidebarItem(
+        label: l10n.manageBibleStories,
+        icon: Icons.auto_stories_outlined,
+        route: AdminRoutes.bibleStories,
         section: l10n.sidebarAdminTools,
       ),
       RoleSidebarItem(
@@ -114,6 +120,12 @@ List<RoleSidebarItem> roleSidebarItems(UserRole role, AppLocalizations l10n) {
         icon: Icons.favorite_outline,
         route: AdminRoutes.sponsorship,
         section: l10n.sidebarCompassion,
+      ),
+      RoleSidebarItem(
+        label: l10n.notifications,
+        icon: Icons.notifications_outlined,
+        route: AdminRoutes.notifications,
+        section: l10n.sidebarCommunity,
       ),
       RoleSidebarItem(
         label: l10n.createAnnouncement,

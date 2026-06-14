@@ -6,6 +6,7 @@ import 'package:kitoapp/features/prayer_requests/models/prayer_request.dart';
 import 'package:kitoapp/features/profile/data/profile_data.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/prayer_requests_store_provider.dart';
+import 'package:kitoapp/shared/widgets/profile_store_provider.dart';
 
 void showPrayerCommentsSheet(
   BuildContext context, {
@@ -47,18 +48,27 @@ class _PrayerCommentsSheetState extends State<PrayerCommentsSheet> {
     super.dispose();
   }
 
-  void _submitComment() {
+  Future<void> _submitComment() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
-    final profile = ProfileData.forRole(widget.role);
-    PrayerRequestsStoreProvider.of(context).addComment(
-      requestId: widget.request.id,
-      authorName: profile.fullName,
-      authorRole: widget.role,
-      message: text,
-    );
-    _controller.clear();
+    final profile = ProfileStoreProvider.of(context).profile ??
+        ProfileData.forRole(widget.role);
+
+    try {
+      await PrayerRequestsStoreProvider.of(context).addComment(
+        requestId: widget.request.id,
+        authorName: profile.fullName,
+        authorRole: widget.role,
+        message: text,
+      );
+      _controller.clear();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).commentFailed)),
+      );
+    }
   }
 
   @override

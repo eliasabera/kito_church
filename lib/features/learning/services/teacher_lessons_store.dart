@@ -1,16 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:kitoapp/features/attendance/services/teacher_attendance_store.dart';
-import 'package:kitoapp/features/learning/data/teacher_lessons_data.dart';
+import 'package:kitoapp/features/auth/services/auth_session.dart';
 import 'package:kitoapp/features/learning/models/teacher_lesson.dart';
+import 'package:kitoapp/features/learning/services/teacher_lessons_supabase_service.dart';
 
 class TeacherLessonsStore extends ChangeNotifier {
   TeacherLessonsStore({TeacherAttendanceStore? attendanceStore})
-      : _attendanceStore = attendanceStore,
-        _lessons = List.of(TeacherLessonsData.initialLessons);
+      : _attendanceStore = attendanceStore;
 
   final TeacherAttendanceStore? _attendanceStore;
-  final List<TeacherLesson> _lessons;
-  int _idCounter = 6;
+  final List<TeacherLesson> _lessons = [];
+  bool _isLoading = false;
+  String? _error;
+
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
   List<TeacherLesson> get allLessons {
     final copy = List<TeacherLesson>.from(_lessons);
@@ -59,18 +63,111 @@ class TeacherLessonsStore extends ChangeNotifier {
       ..sort((a, b) => b.weekNumber.compareTo(a.weekNumber));
   }
 
-  void updateLessonFlags(
+  Future<void> loadFromSupabase() async {
+    final teacherId = AuthSession.userId;
+    if (teacherId == null) return;
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final remoteLessons =
+          await TeacherLessonsSupabaseService.fetchLessonsForTeacher(teacherId);
+      _lessons
+        ..clear()
+        ..addAll(remoteLessons);
+    } catch (error, stackTrace) {
+      debugPrint('TeacherLessonsStore.loadFromSupabase failed: $error\n$stackTrace');
+      _error = error.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadPublishedForStudents() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final remoteLessons =
+          await TeacherLessonsSupabaseService.fetchPublishedLessons();
+      _lessons
+        ..clear()
+        ..addAll(remoteLessons);
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherLessonsStore.loadPublishedForStudents failed: $error\n$stackTrace',
+      );
+      _error = error.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateLessonFlags(
     String lessonId, {
     bool? hasQuiz,
     bool? hasAssignment,
-  }) {
+  }) async {
     final index = _lessons.indexWhere((l) => l.id == lessonId);
     if (index == -1) return;
-    _lessons[index] = _lessons[index].copyWith(
-      hasQuiz: hasQuiz,
-      hasAssignment: hasAssignment,
-    );
-    notifyListeners();
+
+    try {
+      await TeacherLessonsSupabaseService.updateLessonFlags(
+        lessonId: lessonId,
+        hasQuiz: hasQuiz,
+        hasAssignment: hasAssignment,
+      );
+      _lessons[index] = _lessons[index].copyWith(
+        hasQuiz: hasQuiz,
+        hasAssignment: hasAssignment,
+      );
+      notifyListeners();
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherLessonsStore.updateLessonFlags failed: $error\n$stackTrace',
+      );
+    }
+  }
+
+  Future<void> updateLesson(String lessonId, EditLessonDraft draft) async {
+    final previous = lessonById(lessonId);
+    if (previous == null) return;
+
+    try {
+      final updated = await TeacherLessonsSupabaseService.updateLesson(
+        lessonId: lessonId,
+        draft: draft,
+      );
+
+      final index = _lessons.indexWhere((lesson) => lesson.id == lessonId);
+      if (index != -1) {
+        _lessons[index] = updated;
+      }
+
+      final wasDraft = previous.status == TeacherLessonStatus.draft;
+      final isPublished = draft.status != TeacherLessonStatus.draft;
+      if (wasDraft && isPublished) {
+        await _attendanceStore?.createSessionFromLesson(
+          lessonId: updated.id,
+          weekNumber: updated.weekNumber,
+          lessonTitle: updated.title,
+          postedDate: updated.postedDate,
+          deadline: updated.deadline,
+        );
+      }
+
+      notifyListeners();
+    } catch (error, stackTrace) {
+      debugPrint('TeacherLessonsStore.updateLesson failed: $error\n$stackTrace');
+      _error = error.toString();
+      notifyListeners();
+      rethrow;
+    }
   }
 
   List<TeacherLesson> lessonsFor(TeacherLessonFilter? filter) {
@@ -90,53 +187,44 @@ class TeacherLessonsStore extends ChangeNotifier {
     };
   }
 
-  void postLesson(PostLessonDraft draft) {
-    final nextWeek = _lessons.isEmpty
-        ? 1
-        : _lessons.map((l) => l.weekNumber).reduce((a, b) => a > b ? a : b) + 1;
+  Future<TeacherLesson?> postLesson(PostLessonDraft draft) async {
+    final teacherId = AuthSession.userId;
+    if (teacherId == null) return null;
 
-    final now = DateTime.now();
-    final status = draft.publish
-        ? (draft.deadline.isAfter(now)
-            ? TeacherLessonStatus.published
-            : TeacherLessonStatus.closed)
-        : TeacherLessonStatus.draft;
+    try {
+      final maxWeek =
+          await TeacherLessonsSupabaseService.fetchMaxWeekNumber(teacherId);
+      final localMax = _lessons.isEmpty
+          ? 0
+          : _lessons.map((l) => l.weekNumber).reduce((a, b) => a > b ? a : b);
+      final nextWeek = (maxWeek > localMax ? maxWeek : localMax) + 1;
 
-    final lesson = TeacherLesson(
-      id: 'tl${_idCounter++}',
-      weekNumber: nextWeek,
-      title: draft.title.trim(),
-      minAge: draft.minAge,
-      maxAge: draft.maxAge,
-      postedDate: now,
-      deadline: draft.deadline,
-      status: status,
-      studentsTotal: _studentsForRange(draft.minAge, draft.maxAge),
-      studentsCompleted: 0,
-      hasQuiz: draft.hasQuiz,
-      hasAssignment: draft.hasAssignment,
-      description: draft.description.trim().isEmpty ? null : draft.description,
-    );
-
-    _lessons.add(lesson);
-
-    if (draft.publish) {
-      _attendanceStore?.createSessionFromLesson(
-        weekNumber: lesson.weekNumber,
-        lessonTitle: lesson.title,
-        postedDate: lesson.postedDate,
-        minAge: lesson.minAge,
-        maxAge: lesson.maxAge,
+      final lesson = await TeacherLessonsSupabaseService.insertLesson(
+        teacherId: teacherId,
+        draft: draft,
+        weekNumber: nextWeek,
       );
+
+      _lessons.add(lesson);
+
+      if (draft.publish) {
+        await _attendanceStore?.createSessionFromLesson(
+          lessonId: lesson.id,
+          weekNumber: lesson.weekNumber,
+          lessonTitle: lesson.title,
+          postedDate: lesson.postedDate,
+          deadline: lesson.deadline,
+        );
+      }
+
+      notifyListeners();
+      return lesson;
+    } catch (error, stackTrace) {
+      debugPrint('TeacherLessonsStore.postLesson failed: $error\n$stackTrace');
+      _error = error.toString();
+      notifyListeners();
+      rethrow;
     }
-
-    notifyListeners();
-  }
-
-  int _studentsForRange(int minAge, int maxAge) {
-    if (minAge <= 12 && maxAge >= 24) return 28;
-    if (maxAge <= 16) return 14;
-    return 14;
   }
 }
 

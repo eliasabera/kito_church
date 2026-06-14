@@ -9,7 +9,7 @@ class ProfileData {
     email: 'abel@student.kgc.org',
     role: UserRole.student,
     compassionId: 'KGC-COMP-003',
-    grade: 'Grade 8',
+    university: 'Addis Ababa University',
     phone: '+251 91 234 5678',
     sponsorName: 'John Miller',
     sponsorCountry: 'USA',

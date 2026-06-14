@@ -6,12 +6,14 @@ import 'package:kitoapp/l10n/app_localizations.dart';
 class AnnouncementFilterBar extends StatelessWidget {
   const AnnouncementFilterBar({
     super.key,
+    required this.categories,
     required this.value,
     required this.onChanged,
   });
 
-  final AnnouncementCategory? value;
-  final ValueChanged<AnnouncementCategory?> onChanged;
+  final List<AnnouncementCategoryItem> categories;
+  final String? value;
+  final ValueChanged<String?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class AnnouncementFilterBar extends StatelessWidget {
           border: Border.all(color: AppColors.primary.withValues(alpha: 0.22)),
         ),
         child: DropdownButtonHideUnderline(
-          child: DropdownButton<AnnouncementCategory?>(
+          child: DropdownButton<String?>(
             value: value,
             isExpanded: true,
             isDense: true,
@@ -45,18 +47,11 @@ class AnnouncementFilterBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             items: [
               DropdownMenuItem(value: null, child: Text(l10n.all)),
-              DropdownMenuItem(
-                value: AnnouncementCategory.church,
-                child: Text(l10n.churchAnnouncements),
-              ),
-              DropdownMenuItem(
-                value: AnnouncementCategory.events,
-                child: Text(l10n.events),
-              ),
-              DropdownMenuItem(
-                value: AnnouncementCategory.academic,
-                child: Text(l10n.academic),
-              ),
+              for (final category in categories)
+                DropdownMenuItem(
+                  value: category.id,
+                  child: Text(category.name),
+                ),
             ],
             onChanged: onChanged,
           ),

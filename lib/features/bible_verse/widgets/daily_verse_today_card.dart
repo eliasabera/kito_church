@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/models/bible_verse.dart';
+import 'package:kitoapp/shared/widgets/verse_image.dart';
 
 class DailyVerseTodayCard extends StatelessWidget {
   const DailyVerseTodayCard({
@@ -40,21 +41,12 @@ class DailyVerseTodayCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
+                    SizedBox(
                 height: 150,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.network(
-                      'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&q=80',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const _HeroFallback(),
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
-                        return const _HeroFallback();
-                      },
-                    ),
+                    VerseImage(verse: verse),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(

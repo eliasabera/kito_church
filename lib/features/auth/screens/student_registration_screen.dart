@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/features/auth/widgets/auth_header.dart';
+import 'package:kitoapp/features/admin/services/users_management_store.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
-import 'package:kitoapp/shared/models/compassion_id.dart';
-import 'package:kitoapp/shared/services/compassion_id_service.dart';
 import 'package:kitoapp/shared/widgets/locale_notifier_provider.dart';
+import 'package:kitoapp/shared/widgets/password_text_field.dart';
+import 'package:kitoapp/shared/widgets/prefixed_text_field.dart';
+import 'package:kitoapp/shared/widgets/users_management_store_provider.dart';
 
 class StudentRegistrationScreen extends StatefulWidget {
   const StudentRegistrationScreen({super.key});
@@ -16,104 +19,32 @@ class StudentRegistrationScreen extends StatefulWidget {
 }
 
 class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
-  final _compassionIdService = CompassionIdService();
-  final _dobController = TextEditingController();
-
-  List<CompassionId> _compassionIds = [];
-  CompassionId? _selectedCompassionId;
-  DateTime? _dateOfBirth;
-  bool _isLoadingIds = true;
-  String? _loadError;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadCompassionIds();
-  }
+  bool _isLoading = false;
+  final _compassionIdController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _universityController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   void dispose() {
-    _dobController.dispose();
+    _compassionIdController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _universityController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
-  Future<void> _loadCompassionIds() async {
-    try {
-      final ids = await _compassionIdService.fetchAvailableIds();
-      if (!mounted) return;
-      setState(() {
-        _compassionIds = ids;
-        _isLoadingIds = false;
-        _loadError = null;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        _isLoadingIds = false;
-        _loadError = AppLocalizations.of(context).noCompassionIdsAvailable;
-      });
-    }
-  }
-
-  Future<void> _pickDateOfBirth() async {
-    final picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(1990),
-      lastDate: DateTime.now(),
-      initialDate: _dateOfBirth ?? DateTime(2010),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: AppColors.background,
-              onSurface: AppColors.text,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      setState(() {
-        _dateOfBirth = picked;
-        _dobController.text = _formatDate(picked);
-      });
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    return '$day/$month/${date.year}';
-  }
-
-  Future<void> _submit() async {
-    final l10n = AppLocalizations.of(context);
-
-    if (_selectedCompassionId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            l10n.pleaseSelectCompassionId,
-            style: const TextStyle(color: AppColors.background),
-          ),
-          backgroundColor: AppColors.primary,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-      return;
-    }
-
-    await _compassionIdService.assignId(_selectedCompassionId!.id);
-
-    if (!mounted) return;
-
+  void _showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          l10n.pendingApproval,
+          message,
           style: const TextStyle(color: AppColors.background),
         ),
         backgroundColor: AppColors.primary,
@@ -121,7 +52,84 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
-    context.pop();
+  }
+
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[^@]+@[^@]+\.[^@]+$').hasMatch(email);
+  }
+
+  Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context);
+
+    if (_compassionIdController.text.trim().isEmpty) {
+      _showMessage(l10n.pleaseSelectCompassionId);
+      return;
+    }
+
+    if (_nameController.text.trim().isEmpty) {
+      _showMessage(l10n.pleaseEnterFullName);
+      return;
+    }
+
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      _showMessage(l10n.pleaseEnterEmail);
+      return;
+    }
+    if (!_isValidEmail(email)) {
+      _showMessage(l10n.invalidEmail);
+      return;
+    }
+
+    if (_passwordController.text.isEmpty) {
+      _showMessage(l10n.pleaseEnterPassword);
+      return;
+    }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showMessage(l10n.passwordsDoNotMatch);
+      return;
+    }
+
+    final store = UsersManagementStoreProvider.of(context);
+    final compassionId = fullCompassionId(_compassionIdController.text);
+    final phone = fullPhoneNumber(_phoneController.text);
+
+    setState(() => _isLoading = true);
+    try {
+      final result = await store.registerStudent(
+        fullName: _nameController.text.trim(),
+        email: email,
+        password: _passwordController.text,
+        compassionId: compassionId,
+        university: _universityController.text.trim().isEmpty
+            ? null
+            : _universityController.text.trim(),
+        phone: phone,
+      );
+
+      if (!mounted) return;
+
+      if (result == LoginResult.emailAlreadyRegistered) {
+        _showMessage(l10n.emailAlreadyRegistered);
+        return;
+      }
+
+      if (result == LoginResult.registrationFailed) {
+        _showMessage(l10n.registrationFailed);
+        return;
+      }
+
+      if (result != LoginResult.success) {
+        _showMessage(l10n.registrationFailed);
+        return;
+      }
+
+      _showMessage(l10n.registrationSubmitted);
+      context.pop();
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -135,7 +143,7 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
         child: Column(
           children: [
             AuthHeader(
-              title: l10n.appTitle,
+              title: l10n.authAppTitle,
               subtitle: l10n.appTagline,
               onToggleLanguage: localeNotifier.toggleLocale,
               onBack: () => context.pop(),
@@ -156,16 +164,27 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      l10n.pendingApproval,
+                      l10n.registrationPendingHint,
                       style: TextStyle(
                         color: AppColors.text.withValues(alpha: 0.7),
                         fontSize: 15,
                       ),
                     ),
                     const SizedBox(height: 28),
-                    _buildCompassionIdField(l10n),
+                    PrefixedTextField(
+                      controller: _compassionIdController,
+                      labelText: l10n.compassionProjectId,
+                      prefixText: compassionIdPrefix,
+                      icon: Icons.badge_outlined,
+                      hintText: l10n.compassionIdSuffixHint,
+                      keyboardType: TextInputType.text,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9-]')),
+                      ],
+                    ),
                     const SizedBox(height: 16),
                     TextFormField(
+                      controller: _nameController,
                       style: const TextStyle(color: AppColors.text),
                       decoration: InputDecoration(
                         labelText: l10n.fullName,
@@ -177,56 +196,79 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
-                      readOnly: true,
-                      onTap: _pickDateOfBirth,
-                      controller: _dobController,
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
                       style: const TextStyle(color: AppColors.text),
                       decoration: InputDecoration(
-                        labelText: l10n.dateOfBirth,
+                        labelText: l10n.email,
                         prefixIcon: const Icon(
-                          Icons.calendar_today_outlined,
-                          color: AppColors.primary,
-                        ),
-                        suffixIcon: const Icon(
-                          Icons.arrow_drop_down,
+                          Icons.email_outlined,
                           color: AppColors.primary,
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
+                    PasswordTextField(
+                      controller: _passwordController,
+                      labelText: l10n.password,
+                    ),
+                    const SizedBox(height: 16),
+                    PasswordTextField(
+                      controller: _confirmPasswordController,
+                      labelText: l10n.confirmPassword,
+                    ),
+                    const SizedBox(height: 16),
                     TextFormField(
+                      controller: _universityController,
                       style: const TextStyle(color: AppColors.text),
                       decoration: InputDecoration(
-                        labelText: l10n.grade,
+                        labelText: l10n.university,
                         prefixIcon: const Icon(
-                          Icons.class_outlined,
+                          Icons.account_balance_outlined,
                           color: AppColors.primary,
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    TextFormField(
+                    PrefixedTextField(
+                      controller: _phoneController,
+                      labelText: '${l10n.phoneNumber} (${l10n.optional})',
+                      prefixText: ethiopianPhonePrefix,
+                      icon: Icons.phone_outlined,
+                      hintText: l10n.phoneSuffixHint,
                       keyboardType: TextInputType.phone,
-                      style: const TextStyle(color: AppColors.text),
-                      decoration: InputDecoration(
-                        labelText: '${l10n.phoneNumber} (${l10n.optional})',
-                        prefixIcon: const Icon(
-                          Icons.phone_outlined,
-                          color: AppColors.primary,
-                        ),
-                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(8),
+                      ],
                     ),
                     const SizedBox(height: 32),
-                    FilledButton(
-                      onPressed: _isLoadingIds || _compassionIds.isEmpty
-                          ? null
-                          : _submit,
-                      child: Text(l10n.submit),
-                    ),
-                    const SizedBox(height: 12),
-                    OutlinedButton(
-                      onPressed: () => context.pop(),
-                      child: Text(l10n.cancel),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => context.pop(),
+                            child: Text(l10n.cancel),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: FilledButton(
+                            onPressed: _isLoading ? null : _submit,
+                            child: _isLoading
+                                ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.background,
+                                    ),
+                                  )
+                                : Text(l10n.submit),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -235,68 +277,6 @@ class _StudentRegistrationScreenState extends State<StudentRegistrationScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCompassionIdField(AppLocalizations l10n) {
-    if (_isLoadingIds) {
-      return InputDecorator(
-        decoration: InputDecoration(
-          labelText: l10n.compassionProjectId,
-          prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.primary),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        child: const SizedBox(
-          height: 24,
-          child: Center(
-            child: SizedBox(
-              width: 22,
-              height: 22,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (_loadError != null || _compassionIds.isEmpty) {
-      return InputDecorator(
-        decoration: InputDecoration(
-          labelText: l10n.compassionProjectId,
-          prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.primary),
-          errorText: l10n.noCompassionIdsAvailable,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-        child: const SizedBox(height: 24),
-      );
-    }
-
-    return DropdownButtonFormField<CompassionId>(
-      initialValue: _selectedCompassionId,
-      style: const TextStyle(color: AppColors.text),
-      decoration: InputDecoration(
-        labelText: l10n.selectCompassionId,
-        prefixIcon: const Icon(Icons.badge_outlined, color: AppColors.primary),
-      ),
-      hint: Text(
-        l10n.selectCompassionId,
-        style: TextStyle(color: AppColors.text.withValues(alpha: 0.6)),
-      ),
-      items: _compassionIds
-          .map(
-            (id) => DropdownMenuItem(
-              value: id,
-              child: Text(
-                id.projectId,
-                style: const TextStyle(color: AppColors.text),
-              ),
-            ),
-          )
-          .toList(),
-      onChanged: (value) => setState(() => _selectedCompassionId = value),
     );
   }
 }

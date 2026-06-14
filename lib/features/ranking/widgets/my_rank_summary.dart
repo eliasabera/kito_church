@@ -11,6 +11,7 @@ class MyRankSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final rank = summary.classRank;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -34,7 +35,7 @@ class MyRankSummary extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '#${summary.classRank}',
+                rank > 0 ? '#$rank' : '—',
                 style: const TextStyle(
                   color: AppColors.background,
                   fontSize: 32,

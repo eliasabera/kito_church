@@ -1,12 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:kitoapp/features/attendance/models/attendance_record.dart';
 import 'package:kitoapp/features/attendance/models/attendance_session.dart';
-import 'package:kitoapp/features/learning/data/student_learning_data.dart';
+import 'package:kitoapp/features/attendance/services/student_attendance_supabase_service.dart';
+import 'package:kitoapp/features/auth/services/auth_session.dart';
 
 class AttendanceStore extends ChangeNotifier {
-  AttendanceStore() : _sessions = List.of(_initialSessions);
+  AttendanceStore();
 
-  final List<AttendanceSession> _sessions;
+  final List<AttendanceSession> _sessions = [];
+  bool _isLoading = false;
+  String? _error;
+
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
   List<AttendanceSession> get sessions {
     final copy = List<AttendanceSession>.from(_sessions);
@@ -68,24 +76,26 @@ class AttendanceStore extends ChangeNotifier {
   }
 
   List<HeatmapCell> get heatmapCells {
-    final cells = <HeatmapCell>[];
-    var sunday = _nearestPastSunday(DateTime.now());
+    final sorted = List<AttendanceSession>.from(_sessions)
+      ..sort((a, b) => a.sessionDate.compareTo(b.sessionDate));
 
-    for (var i = 0; i < 20; i++) {
-      final session = _sessionForDate(sunday);
-      cells.add(
-        HeatmapCell(
-          sessionDate: sunday,
-          status: session?.weekStatus ?? WeekAttendanceStatus.noLesson,
-          weekNumber: session?.weekNumber,
-          lessonTitle: session?.lessonTitle,
-          sessionId: session?.id,
-        ),
-      );
-      sunday = sunday.subtract(const Duration(days: 7));
-    }
+    if (sorted.isEmpty) return const [];
 
-    return cells.reversed.toList();
+    final recent = sorted.length <= 20
+        ? sorted
+        : sorted.sublist(sorted.length - 20);
+
+    return recent
+        .map(
+          (session) => HeatmapCell(
+            sessionDate: session.sessionDate,
+            status: session.weekStatus,
+            weekNumber: session.weekNumber,
+            lessonTitle: session.lessonTitle,
+            sessionId: session.id,
+          ),
+        )
+        .toList();
   }
 
   List<AttendanceRecord> recordsFor(AttendanceType? filter) {
@@ -94,46 +104,106 @@ class AttendanceStore extends ChangeNotifier {
     return records.where((record) => record.type == filter).toList();
   }
 
-  void markLessonComplete(String sessionId) {
+  Future<void> loadFromSupabase() async {
+    final studentId = AuthSession.userId;
+    if (studentId == null) return;
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final remote =
+          await StudentAttendanceSupabaseService.fetchSessionsForStudent(
+        studentId,
+      );
+      _sessions
+        ..clear()
+        ..addAll(remote);
+    } catch (error, stackTrace) {
+      debugPrint('AttendanceStore.loadFromSupabase failed: $error\n$stackTrace');
+      _error = error.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void clear() {
+    _sessions.clear();
+    _error = null;
+    notifyListeners();
+  }
+
+  Future<void> markLessonComplete(String sessionId) async {
     final session = sessionById(sessionId);
     if (session == null || !session.needsMakeup) return;
+
     session.lessonCompleted = true;
     notifyListeners();
+
+    final studentId = AuthSession.userId;
+    if (studentId == null) return;
+
+    try {
+      await StudentAttendanceSupabaseService.markLessonComplete(
+        sessionId: sessionId,
+        studentId: studentId,
+      );
+    } catch (error, stackTrace) {
+      debugPrint(
+        'AttendanceStore.markLessonComplete failed: $error\n$stackTrace',
+      );
+    }
   }
 
-  void markOnlineAttendance(String sessionId) {
+  Future<void> markOnlineAttendance(String sessionId) async {
     final session = sessionById(sessionId);
     if (session == null || !session.canMarkOnline) return;
+
     session.onlineMarked = true;
+    session.lessonCompleted = true;
     notifyListeners();
+
+    final studentId = AuthSession.userId;
+    if (studentId == null) return;
+
+    try {
+      await StudentAttendanceSupabaseService.markOnlineAttendance(
+        sessionId: sessionId,
+        studentId: studentId,
+      );
+    } catch (error, stackTrace) {
+      debugPrint(
+        'AttendanceStore.markOnlineAttendance failed: $error\n$stackTrace',
+      );
+    }
   }
 
-  void markOnlineFromLearning(int weekNumber) {
+  Future<void> markOnlineFromLearning(int weekNumber) async {
     final session = sessionForWeek(weekNumber);
     if (session == null || session.isAttended) return;
     if (session.deadline != null && DateTime.now().isAfter(session.deadline!)) {
       return;
     }
+
     session.onlineMarked = true;
     session.lessonCompleted = true;
     notifyListeners();
-  }
 
-  AttendanceSession? _sessionForDate(DateTime date) {
-    for (final session in _sessions) {
-      if (_isSameDay(session.sessionDate, date)) return session;
+    final studentId = AuthSession.userId;
+    if (studentId == null) return;
+
+    try {
+      await StudentAttendanceSupabaseService.markOnlineForWeek(
+        studentId: studentId,
+        weekNumber: weekNumber,
+      );
+    } catch (error, stackTrace) {
+      debugPrint(
+        'AttendanceStore.markOnlineFromLearning failed: $error\n$stackTrace',
+      );
     }
-    return null;
-  }
-
-  DateTime _nearestPastSunday(DateTime from) {
-    final weekday = from.weekday;
-    final daysSinceSunday = weekday % 7;
-    return DateTime(from.year, from.month, from.day - daysSinceSunday);
-  }
-
-  bool _isSameDay(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
   int _computeStreakWeeks() {
@@ -147,109 +217,5 @@ class AttendanceStore extends ChangeNotifier {
       }
     }
     return streak.clamp(0, 99);
-  }
-
-  static List<AttendanceSession> get _initialSessions {
-    final learningWeeks = StudentLearningData.weeks;
-    final sessions = <AttendanceSession>[
-      AttendanceSession(
-        id: 'w1',
-        weekNumber: 1,
-        postedDate: learningWeeks[0].postedDate,
-        sessionDate: learningWeeks[0].sessionDate,
-        deadline: learningWeeks[0].deadline,
-        sessionLabel: 'Week 1 — Sunday Class',
-        lessonId: learningWeeks[0].lesson.id,
-        lessonTitle: learningWeeks[0].title,
-        physicalStatus: AttendanceStatus.present,
-      ),
-      AttendanceSession(
-        id: 'w2',
-        weekNumber: 2,
-        postedDate: learningWeeks[1].postedDate,
-        sessionDate: learningWeeks[1].sessionDate,
-        deadline: learningWeeks[1].deadline,
-        sessionLabel: 'Week 2 — Sunday Class',
-        lessonId: learningWeeks[1].lesson.id,
-        lessonTitle: learningWeeks[1].title,
-        physicalStatus: AttendanceStatus.absent,
-        onlineMarked: true,
-        lessonCompleted: true,
-      ),
-      AttendanceSession(
-        id: 'w3',
-        weekNumber: 3,
-        postedDate: learningWeeks[2].postedDate,
-        sessionDate: learningWeeks[2].sessionDate,
-        deadline: learningWeeks[2].deadline,
-        sessionLabel: 'Week 3 — Sunday Class',
-        lessonId: learningWeeks[2].lesson.id,
-        lessonTitle: learningWeeks[2].title,
-        physicalStatus: AttendanceStatus.absent,
-      ),
-      AttendanceSession(
-        id: 'w4',
-        weekNumber: 4,
-        postedDate: learningWeeks[3].postedDate,
-        sessionDate: learningWeeks[3].sessionDate,
-        deadline: learningWeeks[3].deadline,
-        sessionLabel: 'Week 4 — Sunday Class',
-        lessonId: learningWeeks[3].lesson.id,
-        lessonTitle: learningWeeks[3].title,
-        physicalStatus: AttendanceStatus.absent,
-      ),
-      AttendanceSession(
-        id: 'h1',
-        sessionDate: DateTime(2026, 5, 25),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.present,
-      ),
-      AttendanceSession(
-        id: 'h2',
-        sessionDate: DateTime(2026, 5, 18),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.present,
-      ),
-      AttendanceSession(
-        id: 'h3',
-        sessionDate: DateTime(2026, 5, 11),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.late,
-      ),
-      AttendanceSession(
-        id: 'h4',
-        sessionDate: DateTime(2026, 5, 4),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.present,
-      ),
-      AttendanceSession(
-        id: 'h5',
-        sessionDate: DateTime(2026, 4, 27),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.absent,
-        onlineMarked: true,
-        lessonCompleted: true,
-      ),
-      AttendanceSession(
-        id: 'h6',
-        sessionDate: DateTime(2026, 4, 20),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.present,
-      ),
-      AttendanceSession(
-        id: 'h7',
-        sessionDate: DateTime(2026, 4, 13),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.present,
-      ),
-      AttendanceSession(
-        id: 'h8',
-        sessionDate: DateTime(2026, 4, 6),
-        sessionLabel: 'Sunday Class',
-        physicalStatus: AttendanceStatus.present,
-      ),
-    ];
-
-    return sessions;
   }
 }

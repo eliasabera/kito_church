@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kitoapp/core/enums/app_enums.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
+import 'package:kitoapp/features/notifications/widgets/notification_bell_button.dart';
 import 'package:kitoapp/shared/widgets/app_bottom_nav_bar.dart';
 import 'package:kitoapp/shared/widgets/role_sidebar.dart';
 
@@ -48,6 +49,11 @@ class RoleShellScaffold extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
+                  if (role == UserRole.student || role == UserRole.admin)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: NotificationBellButton(role: role),
+                    ),
                   Expanded(child: navigationShell),
                   bottomNav,
                 ],
@@ -66,14 +72,16 @@ class RoleShellScaffold extends StatelessWidget {
           onNavigate: () => Navigator.of(context).pop(),
         ),
       ),
-      appBar: const _ShellAppBar(),
+      appBar: _ShellAppBar(role: role),
       body: body,
     );
   }
 }
 
 class _ShellAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _ShellAppBar();
+  const _ShellAppBar({required this.role});
+
+  final UserRole role;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -91,6 +99,7 @@ class _ShellAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
       ),
+      actions: [NotificationBellButton(role: role)],
     );
   }
 }

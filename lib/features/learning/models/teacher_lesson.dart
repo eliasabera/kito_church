@@ -103,3 +103,25 @@ class PostLessonDraft {
   final bool hasAssignment;
   final bool publish;
 }
+
+class EditLessonDraft {
+  const EditLessonDraft({
+    required this.title,
+    required this.minAge,
+    required this.maxAge,
+    required this.deadline,
+    required this.status,
+    this.description = '',
+    this.hasQuiz = false,
+    this.hasAssignment = false,
+  });
+
+  final String title;
+  final int minAge;
+  final int maxAge;
+  final DateTime deadline;
+  final TeacherLessonStatus status;
+  final String description;
+  final bool hasQuiz;
+  final bool hasAssignment;
+}

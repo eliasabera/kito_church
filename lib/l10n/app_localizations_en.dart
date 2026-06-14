@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'KGC Connect';
 
   @override
+  String get authAppTitle => 'KGC Connect ET-221';
+
+  @override
   String get login => 'Login';
 
   @override
@@ -25,6 +28,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get password => 'Password';
+
+  @override
+  String get pleaseEnterEmail => 'Please enter your email';
+
+  @override
+  String get pleaseEnterPassword => 'Please enter a password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications yet';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get invalidCredentials => 'Invalid email or password';
+
+  @override
+  String get accountPendingApproval => 'Your account is pending admin approval';
+
+  @override
+  String get accountRejected => 'Your registration was not approved';
+
+  @override
+  String get accountSuspended => 'Your account has been suspended';
+
+  @override
+  String get emailAlreadyRegistered => 'This email is already registered';
+
+  @override
+  String get registrationFailed => 'Registration failed. Please try again.';
+
+  @override
+  String get pleaseEnterFullName => 'Please enter your full name';
+
+  @override
+  String get registrationSubmitted =>
+      'Registration submitted. An admin will review your account.';
+
+  @override
+  String get registrationPendingHint =>
+      'Submit your details. An admin must approve your account before you can sign in.';
+
+  @override
+  String get about => 'About';
 
   @override
   String get student => 'Student';
@@ -102,7 +161,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dateOfBirth => 'Date of Birth';
 
   @override
-  String get grade => 'Grade';
+  String get university => 'University Name';
 
   @override
   String get phoneNumber => 'Phone Number';
@@ -168,6 +227,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todaysClasses => 'Today\'s Classes';
 
   @override
+  String get noClassesToday => 'No classes scheduled for today';
+
+  @override
   String get totalStudents => 'Total Students';
 
   @override
@@ -201,14 +263,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get compassionProjectId => 'Compassion Project ID';
 
   @override
-  String get selectCompassionId => 'Select Compassion ID';
+  String get selectCompassionId => 'Enter your Compassion ID';
+
+  @override
+  String get compassionIdSuffixHint => 'Your ID number';
+
+  @override
+  String get phoneSuffixHint => 'XXXXXXXX';
 
   @override
   String get noCompassionIdsAvailable =>
       'No Compassion IDs available. Contact admin.';
 
   @override
-  String get pleaseSelectCompassionId => 'Please select your Compassion ID';
+  String get pleaseSelectCompassionId => 'Please enter your Compassion ID';
 
   @override
   String get menuMain => 'Main';
@@ -522,6 +590,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get prayerRequestSubmitted => 'Prayer request submitted';
 
   @override
+  String get prayerRequestSubmitFailed =>
+      'Failed to submit prayer request. Please try again.';
+
+  @override
+  String get commentFailed => 'Failed to post comment. Please try again.';
+
+  @override
   String get enterPrayerRequest => 'Write your prayer request here...';
 
   @override
@@ -633,7 +708,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get learningPathHint =>
-      'Lessons post on Saturday — complete the lesson and assessment before the deadline to mark Sunday attendance';
+      'Complete each week\'s lesson and assessment before the deadline to mark weekly attendance';
 
   @override
   String weekNumber(int number) {
@@ -705,7 +780,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get attendanceHeatmapHint =>
-      'Each block is a Sunday class. Finish the lesson and assessment before the deadline to mark online attendance.';
+      'Each block is a weekly session. Complete the lesson and assessment before the deadline to mark online attendance.';
 
   @override
   String get heatmapPresent => 'Present';
@@ -868,6 +943,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lessonSavedAsDraft => 'Lesson saved as draft';
+
+  @override
+  String get lessonSaveFailed => 'Failed to save lesson. Please try again.';
+
+  @override
+  String get editLesson => 'Edit Lesson';
+
+  @override
+  String get lessonUpdated => 'Lesson updated successfully';
+
+  @override
+  String get lessonUpdateFailed => 'Failed to update lesson. Please try again.';
 
   @override
   String postedOn(String date) {
@@ -1093,10 +1180,24 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add at least one complete question with all options filled';
 
   @override
+  String questionTextRequired(int number) {
+    return 'Please enter question $number';
+  }
+
+  @override
+  String optionRequired(int question, int option) {
+    return 'Please enter option $option for question $question';
+  }
+
+  @override
   String get saveAssessment => 'Save';
 
   @override
   String get assessmentSaved => 'Assessment saved successfully';
+
+  @override
+  String get assessmentSaveFailed =>
+      'Failed to save assessment. Please try again.';
 
   @override
   String get needsSetup => 'Needs setup';
@@ -1140,4 +1241,668 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get teacherPrayerViewHint =>
       'Students submit prayer requests. View them here and join in prayer with likes and comments.';
+
+  @override
+  String get addUser => 'Add User';
+
+  @override
+  String get editUser => 'Edit User';
+
+  @override
+  String get deleteUser => 'Delete User';
+
+  @override
+  String get suspendUser => 'Suspend';
+
+  @override
+  String get reactivateUser => 'Reactivate';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get suspended => 'Suspended';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get confirmDeleteUser =>
+      'Delete this user? This action cannot be undone.';
+
+  @override
+  String get userAdded => 'User added successfully';
+
+  @override
+  String get userUpdated => 'User updated successfully';
+
+  @override
+  String get userDeleted => 'User deleted';
+
+  @override
+  String get userSuspended => 'User suspended';
+
+  @override
+  String get userReactivated => 'User reactivated';
+
+  @override
+  String get userApproved => 'User approved';
+
+  @override
+  String get userRejected => 'User rejected';
+
+  @override
+  String get noUsersFound => 'No users found';
+
+  @override
+  String get userManagementOverview => 'User Overview';
+
+  @override
+  String get searchUsers => 'Search users...';
+
+  @override
+  String get joinedOn => 'Joined';
+
+  @override
+  String get totalUsers => 'Total Users';
+
+  @override
+  String get activeUsers => 'Active';
+
+  @override
+  String get suspendedUsers => 'Suspended';
+
+  @override
+  String get allUsers => 'All Users';
+
+  @override
+  String get userFormRequired => 'Please enter name and email';
+
+  @override
+  String get reportsOverview => 'Reports Overview';
+
+  @override
+  String get platformInsights => 'Platform Insights';
+
+  @override
+  String get reportsHeroSubtitle =>
+      'Analytics for ET-221 Compassion project university students';
+
+  @override
+  String get avgAttendance => 'Avg. Attendance';
+
+  @override
+  String get avgScore => 'Avg. Score';
+
+  @override
+  String get completionRate => 'Completion Rate';
+
+  @override
+  String get activeStudents => 'Active Students';
+
+  @override
+  String get lessonsPublished => 'Lessons Published';
+
+  @override
+  String get keyMetrics => 'Key Metrics';
+
+  @override
+  String get generateReport => 'Generate PDF Report';
+
+  @override
+  String get generatingReport => 'Generating report...';
+
+  @override
+  String get reportGenerated => 'Report PDF ready to save or share';
+
+  @override
+  String get reportGenerateFailed => 'Failed to generate report';
+
+  @override
+  String get reportPdfTitle => 'KGC Connect Platform Report';
+
+  @override
+  String get generatedOn => 'Generated on';
+
+  @override
+  String get rank => 'Rank';
+
+  @override
+  String get settingsHeroSubtitle =>
+      'Manage your account, preferences, and platform notifications';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get platformSettings => 'Platform Settings';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get emailAlerts => 'Email Alerts';
+
+  @override
+  String get pendingApprovalAlerts => 'Pending Approval Alerts';
+
+  @override
+  String get aboutApp => 'About';
+
+  @override
+  String get appVersion => 'App Version';
+
+  @override
+  String get scoringHeroSubtitle =>
+      'Set virtual learning weights for university and college students';
+
+  @override
+  String get scoringOverview => 'Scoring Overview';
+
+  @override
+  String get totalWeight => 'Total Weight';
+
+  @override
+  String get weightMustEqual100 => 'Must equal 100%';
+
+  @override
+  String get validWeights => 'Valid';
+
+  @override
+  String get adjustWeights => 'Adjust Weights';
+
+  @override
+  String get scoringWeightsHint =>
+      'Attendance, quizzes, and assignments must total 100% before saving.';
+
+  @override
+  String get scoringAttendanceHint => 'Online and virtual class attendance';
+
+  @override
+  String get scoringQuizHint => 'Weekly quiz performance';
+
+  @override
+  String get scoringAssignmentHint => 'Submitted coursework and assignments';
+
+  @override
+  String get resetToDefaults => 'Reset to Defaults';
+
+  @override
+  String get scoringSaved => 'Scoring configuration saved';
+
+  @override
+  String get uploadVerseHeroSubtitle =>
+      'Schedule and publish daily Bible verses for students';
+
+  @override
+  String get verseText => 'Verse Text';
+
+  @override
+  String get scheduleDate => 'Schedule Date';
+
+  @override
+  String get verseUploaded => 'Verse uploaded successfully';
+
+  @override
+  String get verseFormRequired =>
+      'Please enter verse text, reference, and date';
+
+  @override
+  String get attachVerseImage => 'Attach Image';
+
+  @override
+  String get attachVerseImageHint =>
+      'Optional image to display with this verse';
+
+  @override
+  String get changeVerseImage => 'Change Image';
+
+  @override
+  String get sponsorshipHeroTitle => 'Student & Sponsor Links';
+
+  @override
+  String get sponsorshipHeroSubtitle =>
+      'Assign sponsors to students and update links when sponsors change';
+
+  @override
+  String get sponsorshipOverview => 'Sponsorship Overview';
+
+  @override
+  String get studentsWithSponsor => 'students with sponsor';
+
+  @override
+  String get unlinkedStudents => 'Unlinked';
+
+  @override
+  String get totalSponsors => 'Sponsors';
+
+  @override
+  String get availableSponsors => 'Available';
+
+  @override
+  String get withSponsor => 'With Sponsor';
+
+  @override
+  String get withoutSponsor => 'Without Sponsor';
+
+  @override
+  String get noSponsorAssigned => 'No sponsor assigned';
+
+  @override
+  String get studentSponsorLinks => 'Student–Sponsor Links';
+
+  @override
+  String get searchStudentsOrSponsors => 'Search students or sponsors';
+
+  @override
+  String get noStudentsFound => 'No students found';
+
+  @override
+  String get assignSponsor => 'Assign Sponsor';
+
+  @override
+  String get changeSponsor => 'Change Sponsor';
+
+  @override
+  String get removeSponsorLink => 'Remove Sponsor Link';
+
+  @override
+  String get currentSponsor => 'Current sponsor';
+
+  @override
+  String get selectSponsor => 'Select Sponsor';
+
+  @override
+  String selectSponsorFor(String studentName) {
+    return 'Choose a sponsor for $studentName';
+  }
+
+  @override
+  String get noAvailableSponsors =>
+      'No sponsors available. Add a sponsor first.';
+
+  @override
+  String get addSponsor => 'Add Sponsor';
+
+  @override
+  String get sponsorAssigned => 'Sponsor assigned successfully';
+
+  @override
+  String get sponsorAdded => 'Sponsor added successfully';
+
+  @override
+  String get sponsorLinkRemoved => 'Sponsor link removed';
+
+  @override
+  String linkedSince(String date) {
+    return 'Linked since $date';
+  }
+
+  @override
+  String get giftsHeroTitle => 'Gift Announcements';
+
+  @override
+  String get giftsHeroSubtitle =>
+      'Record gifts from sponsors and notify sponsored students';
+
+  @override
+  String get toAnnounce => 'to announce';
+
+  @override
+  String get announced => 'Announced';
+
+  @override
+  String get awaitingAnnouncement => 'Awaiting';
+
+  @override
+  String get announceGift => 'Announce to Student';
+
+  @override
+  String get giftAnnounced => 'Gift announced to student';
+
+  @override
+  String get recordGift => 'Record Gift';
+
+  @override
+  String get recordGiftHint =>
+      'Log a gift sent by a sponsor for a sponsored student';
+
+  @override
+  String get selectStudent => 'Select Student';
+
+  @override
+  String get giftTitle => 'Gift Title';
+
+  @override
+  String get giftDescription => 'Gift Description';
+
+  @override
+  String get giftType => 'Gift Type';
+
+  @override
+  String get giftRecorded => 'Gift recorded successfully';
+
+  @override
+  String get searchGifts => 'Search gifts, students, or sponsors';
+
+  @override
+  String get noSponsoredStudentsForGifts =>
+      'No sponsored students. Assign sponsors first.';
+
+  @override
+  String get emailOptional => 'Email (optional)';
+
+  @override
+  String get announcementsHeroTitle => 'Notify Students';
+
+  @override
+  String get announcementsHeroSubtitle =>
+      'Create and publish announcements for all students';
+
+  @override
+  String get publishedAnnouncements => 'Published';
+
+  @override
+  String get withImage => 'With Image';
+
+  @override
+  String get studentsNotified => 'Notified';
+
+  @override
+  String get createAnnouncementHint =>
+      'Publish an announcement and students will be notified immediately';
+
+  @override
+  String get announcementTitle => 'Title';
+
+  @override
+  String get announcementMessage => 'Message';
+
+  @override
+  String get announcementCategory => 'Category';
+
+  @override
+  String get attachAnnouncementImage => 'Attach Image';
+
+  @override
+  String get attachAnnouncementImageHint =>
+      'Optional image to include with this announcement';
+
+  @override
+  String get attachAnnouncementDocument => 'Attach Document';
+
+  @override
+  String get attachAnnouncementDocumentHint =>
+      'Optional PDF or Word file. Saved to Supabase Storage for students and teachers to read.';
+
+  @override
+  String get documentAttachedReady => 'Document attached and ready to publish';
+
+  @override
+  String get publishingAnnouncement => 'Publishing...';
+
+  @override
+  String get uploadingAnnouncementDocument => 'Uploading document...';
+
+  @override
+  String get readDocument => 'Read Document';
+
+  @override
+  String get documentOpenFailed =>
+      'Could not open the document. Please try again.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get withDocument => 'With Document';
+
+  @override
+  String get publishAnnouncement => 'Publish Announcement';
+
+  @override
+  String get announcementPublished =>
+      'Announcement published and students notified';
+
+  @override
+  String get announcementUpdated => 'Announcement updated successfully';
+
+  @override
+  String get announcementUpdateFailed =>
+      'Failed to update announcement. Please try again.';
+
+  @override
+  String get editAnnouncement => 'Edit Announcement';
+
+  @override
+  String get editAnnouncementHint => 'Update the announcement details below';
+
+  @override
+  String get saveAnnouncementChanges => 'Save Changes';
+
+  @override
+  String get savingAnnouncementChanges => 'Saving changes...';
+
+  @override
+  String get removeAnnouncementImage => 'Remove image';
+
+  @override
+  String get removeAnnouncementDocument => 'Remove document';
+
+  @override
+  String get announcementPublishFailed =>
+      'Failed to publish announcement. Please try again.';
+
+  @override
+  String get announcementDocumentUploadFailed =>
+      'Could not upload the document. Please check your connection and try again.';
+
+  @override
+  String get categoryAddFailed => 'Failed to add category. Please try again.';
+
+  @override
+  String get searchAnnouncements => 'Search announcements';
+
+  @override
+  String get deleteAnnouncement => 'Delete Announcement';
+
+  @override
+  String get deleteAnnouncementConfirm =>
+      'Are you sure you want to delete this announcement?';
+
+  @override
+  String get announcementDeleted => 'Announcement deleted';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get newCategoryName => 'New category name';
+
+  @override
+  String get categoryAdded => 'Category added';
+
+  @override
+  String get deleteCategory => 'Delete Category';
+
+  @override
+  String deleteCategoryConfirm(String name) {
+    return 'Delete category \"$name\"?';
+  }
+
+  @override
+  String get categoryDeleted => 'Category deleted';
+
+  @override
+  String get categoryDeleteFailed =>
+      'Failed to delete category. Please try again.';
+
+  @override
+  String get categoryDeleteInUse =>
+      'Cannot delete a category that has announcements.';
+
+  @override
+  String get categoryDeleteLastOne => 'At least one category is required.';
+
+  @override
+  String get postedByDefaultHint => 'Defaults to your account name';
+
+  @override
+  String get selectCategoryFirst => 'Add or select a category first';
+
+  @override
+  String get pleaseEnterAnnouncementTitle =>
+      'Please enter an announcement title';
+
+  @override
+  String get pleaseEnterAnnouncementMessage =>
+      'Please enter the announcement message';
+
+  @override
+  String get pleaseEnterAuthorName => 'Please enter the author name';
+
+  @override
+  String get pleaseSelectAnnouncementCategory => 'Please select a category';
+
+  @override
+  String get announcementTitleTooShort => 'Title must be at least 3 characters';
+
+  @override
+  String get announcementTitleTooLong =>
+      'Title must be 120 characters or fewer';
+
+  @override
+  String get announcementMessageTooShort =>
+      'Message must be at least 10 characters';
+
+  @override
+  String get announcementMessageTooLong =>
+      'Message must be 5000 characters or fewer';
+
+  @override
+  String get authorNameTooShort => 'Author name must be at least 2 characters';
+
+  @override
+  String get authorNameTooLong => 'Author name must be 80 characters or fewer';
+
+  @override
+  String get pleaseEnterCategoryName => 'Please enter a category name';
+
+  @override
+  String get categoryNameTooShort =>
+      'Category name must be at least 2 characters';
+
+  @override
+  String get categoryNameTooLong =>
+      'Category name must be 40 characters or fewer';
+
+  @override
+  String get announcementDocumentTooLarge =>
+      'Document must be 10 MB or smaller';
+
+  @override
+  String get announcementDocumentInvalidType =>
+      'Only PDF, DOC, and DOCX files are allowed';
+
+  @override
+  String get addCategoryFirst => 'Add a category to publish announcements';
+
+  @override
+  String get customCategories => 'Your categories';
+
+  @override
+  String get categories => 'Categories';
+
+  @override
+  String get et221CompassionProject => 'ET-221 Compassion';
+
+  @override
+  String get topPerformersEt221Subtitle => 'ET-221 Compassion project students';
+
+  @override
+  String get manageBibleStories => 'Manage Bible Stories';
+
+  @override
+  String get bibleStoriesHeroTitle => 'Student Home Stories';
+
+  @override
+  String get bibleStoriesHeroSubtitle =>
+      'Add and edit Bible stories shown on the student home screen';
+
+  @override
+  String get bibleStoriesOverview => 'Stories Overview';
+
+  @override
+  String get publishedStories => 'Published stories';
+
+  @override
+  String get totalStories => 'Total Stories';
+
+  @override
+  String get allStories => 'All Stories';
+
+  @override
+  String get searchStories => 'Search stories';
+
+  @override
+  String get noStories => 'No stories found';
+
+  @override
+  String get addBibleStory => 'Add Story';
+
+  @override
+  String get editBibleStory => 'Edit Story';
+
+  @override
+  String get bibleStoryFormHint =>
+      'Stories appear in the swipe carousel on the student home screen';
+
+  @override
+  String get storyTitle => 'Story Title';
+
+  @override
+  String get storySummary => 'Story Summary';
+
+  @override
+  String get imageUrlOptional => 'Image URL (optional)';
+
+  @override
+  String get attachStoryImage => 'Upload Image';
+
+  @override
+  String get deleteStory => 'Delete Story';
+
+  @override
+  String get deleteStoryConfirm =>
+      'Are you sure you want to delete this story?';
+
+  @override
+  String get storyDeleted => 'Story deleted';
+
+  @override
+  String get storyAdded => 'Story added';
+
+  @override
+  String get storyUpdated => 'Story updated';
+
+  @override
+  String get storyPublished => 'Story is now visible to students';
+
+  @override
+  String get storyHidden => 'Story hidden from students';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get published => 'Published';
+
+  @override
+  String get hidden => 'Hidden';
+
+  @override
+  String get showStory => 'Show';
+
+  @override
+  String get hideStory => 'Hide';
 }

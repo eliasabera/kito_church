@@ -6,7 +6,7 @@ class UserProfile {
     required this.email,
     required this.role,
     this.compassionId,
-    this.grade,
+    this.university,
     this.phone,
     this.sponsorName,
     this.sponsorCountry,
@@ -17,7 +17,7 @@ class UserProfile {
   final String email;
   final UserRole role;
   final String? compassionId;
-  final String? grade;
+  final String? university;
   final String? phone;
   final String? sponsorName;
   final String? sponsorCountry;

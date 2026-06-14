@@ -18,19 +18,10 @@ class AttendanceStatsBar extends StatelessWidget {
         children: [
           Expanded(
             child: _StatTile(
-              label: l10n.physicalAttendance,
-              completed: summary.physicalPresent,
-              total: summary.physicalTotal,
-              icon: Icons.church_outlined,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _StatTile(
-              label: l10n.onlineAttendance,
-              completed: summary.onlinePresent,
-              total: summary.onlineTotal,
-              icon: Icons.videocam_outlined,
+              label: l10n.attendance,
+              completed: summary.attended,
+              total: summary.total,
+              icon: Icons.event_available_outlined,
             ),
           ),
           const SizedBox(width: 8),

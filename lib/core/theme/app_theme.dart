@@ -86,6 +86,19 @@ class AppTheme {
           side: BorderSide(color: AppColors.primary.withValues(alpha: 0.2)),
         ),
       ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.primary,
+        contentTextStyle: const TextStyle(
+          color: AppColors.background,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 4,
+      ),
     );
   }
 }

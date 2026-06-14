@@ -1,22 +1,29 @@
 import 'package:flutter/foundation.dart';
-import 'package:kitoapp/features/attendance/data/teacher_attendance_data.dart';
-import 'package:kitoapp/features/learning/data/teacher_assessments_data.dart';
 import 'package:kitoapp/features/learning/models/teacher_assessment.dart';
 import 'package:kitoapp/features/learning/models/teacher_assessment_content.dart';
 import 'package:kitoapp/features/learning/models/teacher_lesson.dart';
+import 'package:kitoapp/features/learning/services/teacher_assessments_supabase_service.dart';
 import 'package:kitoapp/features/learning/services/teacher_lessons_store.dart';
 
 class TeacherAssessmentsStore extends ChangeNotifier {
   TeacherAssessmentsStore({required TeacherLessonsStore lessonsStore})
       : _lessonsStore = lessonsStore {
-    _assignments = Map.of(TeacherAssessmentsData.initialAssignments);
-    _quizzes = Map.of(TeacherAssessmentsData.initialQuizzes);
     _lessonsStore.addListener(_onLessonsChanged);
   }
 
   final TeacherLessonsStore _lessonsStore;
-  late Map<String, AssignmentContent> _assignments;
-  late Map<String, QuizContent> _quizzes;
+  final Map<String, AssignmentContent> _assignments = {};
+  final Map<String, QuizContent> _quizzes = {};
+  final Map<String, String> _assignmentIdsByLesson = {};
+  final Map<String, String> _quizIdsByLesson = {};
+  final Map<String, List<StudentSubmissionRow>> _submissionsByLesson = {};
+  final Map<String, ({int attempted, int avgScore, int passed})> _quizStatsByLesson =
+      {};
+  bool _isLoading = false;
+  String? _error;
+
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
   @override
   void dispose() {
@@ -39,8 +46,8 @@ class TeacherAssessmentsStore extends ChangeNotifier {
     final list = assignments;
     return TeacherAssignmentsSummary(
       total: list.length,
-      pendingReview: list.fold(0, (sum, a) => sum + a.pendingReview),
-      submitted: list.fold(0, (sum, a) => sum + a.submitted),
+      pendingReview: list.fold(0, (sum, item) => sum + item.pendingReview),
+      submitted: list.fold(0, (sum, item) => sum + item.submitted),
       studentsTotal: list.isEmpty ? 0 : list.first.total,
     );
   }
@@ -56,13 +63,134 @@ class TeacherAssessmentsStore extends ChangeNotifier {
       );
     }
     final avg =
-        list.map((q) => q.avgScore).reduce((a, b) => a + b) ~/ list.length;
+        list.map((quiz) => quiz.avgScore).reduce((a, b) => a + b) ~/ list.length;
     return TeacherQuizzesSummary(
       total: list.length,
       avgClassScore: avg,
-      attempted: list.fold(0, (sum, q) => sum + q.attempted),
+      attempted: list.fold(0, (sum, quiz) => sum + quiz.attempted),
       studentsTotal: list.first.total,
     );
+  }
+
+  Future<void> loadFromSupabase() async {
+    final teacherId = TeacherAssessmentsSupabaseService.currentTeacherId;
+    if (teacherId == null) return;
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final assignmentResults =
+          await TeacherAssessmentsSupabaseService.fetchAssignmentsForTeacher(
+        teacherId,
+      );
+      final quizResults =
+          await TeacherAssessmentsSupabaseService.fetchQuizzesForTeacher(
+        teacherId,
+      );
+      _applyLoadResults(
+        assignmentResults: assignmentResults,
+        quizResults: quizResults,
+      );
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherAssessmentsStore.loadFromSupabase failed: $error\n$stackTrace',
+      );
+      _error = error.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadForPublishedLessons() async {
+    final lessonIds =
+        _lessonsStore.publishedLessons.map((lesson) => lesson.id).toList();
+    if (lessonIds.isEmpty) return;
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final assignmentResults =
+          await TeacherAssessmentsSupabaseService.fetchAssignmentsForLessons(
+        lessonIds,
+      );
+      final quizResults =
+          await TeacherAssessmentsSupabaseService.fetchQuizzesForLessons(
+        lessonIds,
+      );
+      _applyLoadResults(
+        assignmentResults: assignmentResults,
+        quizResults: quizResults,
+      );
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherAssessmentsStore.loadForPublishedLessons failed: $error\n$stackTrace',
+      );
+      _error = error.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void _applyLoadResults({
+    required Map<String, AssignmentLoadResult> assignmentResults,
+    required Map<String, QuizLoadResult> quizResults,
+  }) {
+    _assignments
+      ..clear()
+      ..addEntries(
+        assignmentResults.entries.map(
+          (entry) => MapEntry(entry.key, entry.value.content),
+        ),
+      );
+    _assignmentIdsByLesson
+      ..clear()
+      ..addEntries(
+        assignmentResults.entries.map(
+          (entry) => MapEntry(entry.key, entry.value.id),
+        ),
+      );
+    _submissionsByLesson
+      ..clear()
+      ..addEntries(
+        assignmentResults.entries.map(
+          (entry) => MapEntry(entry.key, entry.value.submissions),
+        ),
+      );
+
+    _quizzes
+      ..clear()
+      ..addEntries(
+        quizResults.entries.map(
+          (entry) => MapEntry(entry.key, entry.value.content),
+        ),
+      );
+    _quizIdsByLesson
+      ..clear()
+      ..addEntries(
+        quizResults.entries.map(
+          (entry) => MapEntry(entry.key, entry.value.id),
+        ),
+      );
+    _quizStatsByLesson
+      ..clear()
+      ..addEntries(
+        quizResults.entries.map(
+          (entry) => MapEntry(
+            entry.key,
+            (
+              attempted: entry.value.attempted,
+              avgScore: entry.value.avgScore,
+              passed: entry.value.passed,
+            ),
+          ),
+        ),
+      );
   }
 
   List<TeacherAssignment> assignmentsFor(TeacherAssessmentFilter filter) {
@@ -91,42 +219,51 @@ class TeacherAssessmentsStore extends ChangeNotifier {
     }).toList();
   }
 
-  void saveAssignment(AssignmentContent content) {
-    _assignments[content.lessonId] = content;
-    _lessonsStore.updateLessonFlags(content.lessonId, hasAssignment: true);
-    notifyListeners();
+  Future<void> saveAssignment(AssignmentContent content) async {
+    try {
+      final assignmentId =
+          await TeacherAssessmentsSupabaseService.saveAssignment(content);
+      _assignments[content.lessonId] = content;
+      _assignmentIdsByLesson[content.lessonId] = assignmentId;
+      _submissionsByLesson.putIfAbsent(content.lessonId, () => []);
+      await _lessonsStore.updateLessonFlags(
+        content.lessonId,
+        hasAssignment: true,
+      );
+      notifyListeners();
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherAssessmentsStore.saveAssignment failed: $error\n$stackTrace',
+      );
+      _error = error.toString();
+      notifyListeners();
+      rethrow;
+    }
   }
 
-  void saveQuiz(QuizContent content) {
-    _quizzes[content.lessonId] = content;
-    _lessonsStore.updateLessonFlags(content.lessonId, hasQuiz: true);
-    notifyListeners();
+  Future<void> saveQuiz(QuizContent content) async {
+    try {
+      final quizId = await TeacherAssessmentsSupabaseService.saveQuiz(content);
+      _quizzes[content.lessonId] = content;
+      _quizIdsByLesson[content.lessonId] = quizId;
+      _quizStatsByLesson.putIfAbsent(
+        content.lessonId,
+        () => (attempted: 0, avgScore: 0, passed: 0),
+      );
+      await _lessonsStore.updateLessonFlags(content.lessonId, hasQuiz: true);
+      notifyListeners();
+    } catch (error, stackTrace) {
+      debugPrint('TeacherAssessmentsStore.saveQuiz failed: $error\n$stackTrace');
+      _error = error.toString();
+      notifyListeners();
+      rethrow;
+    }
   }
 
   List<StudentSubmissionRow> submissionsForAssignment(
     TeacherAssignment assignment,
   ) {
-    final names = TeacherAttendanceData.studentNames.take(assignment.total);
-    return names.map((name) {
-      final index = names.toList().indexOf(name);
-      if (index >= assignment.submitted) {
-        return StudentSubmissionRow(
-          studentName: name,
-          status: SubmissionStatus.notSubmitted,
-        );
-      }
-      if (index >= assignment.graded) {
-        return StudentSubmissionRow(
-          studentName: name,
-          status: SubmissionStatus.submitted,
-        );
-      }
-      return StudentSubmissionRow(
-        studentName: name,
-        status: SubmissionStatus.graded,
-        score: 70 + (index * 4) % 30,
-      );
-    }).toList();
+    return List.unmodifiable(_submissionsByLesson[assignment.lessonId] ?? const []);
   }
 
   List<TeacherAssignment> _buildAssignments() {
@@ -135,9 +272,21 @@ class TeacherAssessmentsStore extends ChangeNotifier {
       if (!lesson.hasAssignment) continue;
       final content = _assignments[lesson.id];
       final configured = content?.isConfigured ?? false;
+      final submissions = _submissionsByLesson[lesson.id] ?? const [];
+      final submitted = submissions
+          .where((row) => row.status != SubmissionStatus.notSubmitted)
+          .length;
+      final pendingReview = submissions
+          .where((row) => row.status == SubmissionStatus.submitted)
+          .length;
+      final graded =
+          submissions.where((row) => row.status == SubmissionStatus.graded).length;
+      final assignmentId =
+          _assignmentIdsByLesson[lesson.id] ?? 'as-${lesson.id}';
+
       items.add(
         TeacherAssignment(
-          id: 'as-${lesson.id}',
+          id: assignmentId,
           lessonId: lesson.id,
           weekNumber: lesson.weekNumber,
           title: configured
@@ -145,10 +294,10 @@ class TeacherAssessmentsStore extends ChangeNotifier {
               : _defaultAssignmentTitle(lesson.weekNumber),
           lessonTitle: lesson.title,
           deadline: lesson.deadline,
-          submitted: _submittedFor(lesson),
+          submitted: submitted,
           total: lesson.studentsTotal,
-          pendingReview: _pendingReviewFor(lesson),
-          graded: _gradedFor(lesson),
+          pendingReview: pendingReview,
+          graded: graded,
           isConfigured: configured,
         ),
       );
@@ -162,9 +311,12 @@ class TeacherAssessmentsStore extends ChangeNotifier {
       if (!lesson.hasQuiz) continue;
       final content = _quizzes[lesson.id];
       final configured = content?.isConfigured ?? false;
+      final stats = _quizStatsByLesson[lesson.id];
+      final quizId = _quizIdsByLesson[lesson.id] ?? 'qz-${lesson.id}';
+
       items.add(
         TeacherQuiz(
-          id: 'qz-${lesson.id}',
+          id: quizId,
           lessonId: lesson.id,
           weekNumber: lesson.weekNumber,
           title: configured
@@ -172,10 +324,10 @@ class TeacherAssessmentsStore extends ChangeNotifier {
               : _defaultQuizTitle(lesson.weekNumber),
           lessonTitle: lesson.title,
           deadline: lesson.deadline,
-          attempted: _attemptedFor(lesson),
+          attempted: stats?.attempted ?? 0,
           total: lesson.studentsTotal,
-          avgScore: _avgScoreFor(lesson),
-          passed: _passedFor(lesson),
+          avgScore: stats?.avgScore ?? 0,
+          passed: stats?.passed ?? 0,
           questionCount: content?.questions.length ?? 0,
           isConfigured: configured,
         ),
@@ -192,14 +344,14 @@ class TeacherAssessmentsStore extends ChangeNotifier {
       TeacherAssessmentFilter.all => list,
       TeacherAssessmentFilter.pending => list
           .where(
-            (a) =>
-                !a.isConfigured ||
-                a.pendingReview > 0 ||
-                a.notSubmitted > 0,
+            (item) =>
+                !item.isConfigured ||
+                item.pendingReview > 0 ||
+                item.notSubmitted > 0,
           )
           .toList(),
       TeacherAssessmentFilter.completed =>
-        list.where((a) => a.isConfigured && a.isComplete).toList(),
+        list.where((item) => item.isConfigured && item.isComplete).toList(),
     };
   }
 
@@ -210,59 +362,14 @@ class TeacherAssessmentsStore extends ChangeNotifier {
     return switch (filter) {
       TeacherAssessmentFilter.all => list,
       TeacherAssessmentFilter.pending => list
-          .where((q) => !q.isConfigured || q.notAttempted > 0)
+          .where((item) => !item.isConfigured || item.notAttempted > 0)
           .toList(),
       TeacherAssessmentFilter.completed =>
-        list.where((q) => q.isConfigured && q.isComplete).toList(),
+        list.where((item) => item.isConfigured && item.isComplete).toList(),
     };
   }
 
   static String _defaultAssignmentTitle(int week) => 'Week $week Assignment';
 
   static String _defaultQuizTitle(int week) => 'Week $week Quiz';
-
-  static int _submittedFor(TeacherLesson lesson) {
-    return switch (lesson.status) {
-      TeacherLessonStatus.closed => lesson.studentsTotal - 2,
-      TeacherLessonStatus.active => (lesson.studentsCompleted * 0.7).round(),
-      _ => 0,
-    };
-  }
-
-  static int _pendingReviewFor(TeacherLesson lesson) {
-    final submitted = _submittedFor(lesson);
-    final graded = _gradedFor(lesson);
-    return (submitted - graded).clamp(0, submitted);
-  }
-
-  static int _gradedFor(TeacherLesson lesson) {
-    if (lesson.status == TeacherLessonStatus.closed) {
-      return lesson.studentsTotal - 4;
-    }
-    if (lesson.status == TeacherLessonStatus.active) {
-      return (_submittedFor(lesson) * 0.6).round();
-    }
-    return 0;
-  }
-
-  static int _attemptedFor(TeacherLesson lesson) {
-    return switch (lesson.status) {
-      TeacherLessonStatus.closed => lesson.studentsTotal - 1,
-      TeacherLessonStatus.active => lesson.studentsCompleted,
-      _ => 0,
-    };
-  }
-
-  static int _avgScoreFor(TeacherLesson lesson) {
-    return switch (lesson.status) {
-      TeacherLessonStatus.closed => 84,
-      TeacherLessonStatus.active => 76,
-      _ => 0,
-    };
-  }
-
-  static int _passedFor(TeacherLesson lesson) {
-    final attempted = _attemptedFor(lesson);
-    return (attempted * 0.85).round();
-  }
 }

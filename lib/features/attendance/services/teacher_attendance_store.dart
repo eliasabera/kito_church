@@ -1,16 +1,17 @@
 import 'package:flutter/foundation.dart';
-import 'package:kitoapp/features/attendance/data/teacher_attendance_data.dart';
 import 'package:kitoapp/features/attendance/models/attendance_record.dart';
 import 'package:kitoapp/features/attendance/models/student_attendance_entry.dart';
+import 'package:kitoapp/features/attendance/services/teacher_attendance_supabase_service.dart';
+import 'package:kitoapp/features/auth/services/auth_session.dart';
 
 class TeacherAttendanceStore extends ChangeNotifier {
-  TeacherAttendanceStore()
-      : _sessions = TeacherAttendanceData.initialSessions(),
-        _selectedSessionId = TeacherAttendanceData.initialSessions().first.id;
+  final List<TeacherAttendanceSession> _sessions = [];
+  String? _selectedSessionId;
+  bool _isLoading = false;
+  String? _error;
 
-  final List<TeacherAttendanceSession> _sessions;
-  String _selectedSessionId;
-  int _sessionCounter = 10;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
   List<TeacherAttendanceSession> get sessions {
     final copy = List<TeacherAttendanceSession>.from(_sessions);
@@ -19,13 +20,49 @@ class TeacherAttendanceStore extends ChangeNotifier {
   }
 
   TeacherAttendanceSession? get selectedSession {
+    if (_selectedSessionId == null) {
+      return _sessions.isEmpty ? null : sessions.first;
+    }
     for (final session in _sessions) {
       if (session.id == _selectedSessionId) return session;
     }
-    return _sessions.isEmpty ? null : _sessions.first;
+    return _sessions.isEmpty ? null : sessions.first;
   }
 
   bool get canEditSelectedSession => selectedSession?.isEditable ?? false;
+
+  Future<void> loadFromSupabase() async {
+    final teacherId = AuthSession.userId;
+    if (teacherId == null) return;
+
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final remoteSessions =
+          await TeacherAttendanceSupabaseService.fetchSessionsForTeacher(
+        teacherId,
+      );
+      _sessions
+        ..clear()
+        ..addAll(remoteSessions);
+
+      if (_selectedSessionId != null &&
+          !_sessions.any((session) => session.id == _selectedSessionId)) {
+        _selectedSessionId = null;
+      }
+      _selectedSessionId ??= _sessions.isEmpty ? null : sessions.first.id;
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherAttendanceStore.loadFromSupabase failed: $error\n$stackTrace',
+      );
+      _error = error.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void selectSession(String sessionId) {
     if (_selectedSessionId == sessionId) return;
@@ -44,50 +81,60 @@ class TeacherAttendanceStore extends ChangeNotifier {
   void _selectRelativeSession(int offset) {
     final ordered = sessions;
     if (ordered.isEmpty) return;
-    final index = ordered.indexWhere((s) => s.id == _selectedSessionId);
+    final currentId = _selectedSessionId ?? ordered.first.id;
+    final index = ordered.indexWhere((session) => session.id == currentId);
     if (index < 0) return;
     final newIndex = index + offset;
     if (newIndex < 0 || newIndex >= ordered.length) return;
     selectSession(ordered[newIndex].id);
   }
 
-  bool hasSessionForWeek(int weekNumber) {
-    return _sessions.any((session) => session.weekNumber == weekNumber);
+  Future<bool> hasSessionForWeek(int weekNumber) async {
+    final teacherId = AuthSession.userId;
+    if (teacherId == null) {
+      return _sessions.any((session) => session.weekNumber == weekNumber);
+    }
+
+    return TeacherAttendanceSupabaseService.hasSessionForWeek(
+      teacherId: teacherId,
+      weekNumber: weekNumber,
+    );
   }
 
-  void createSessionFromLesson({
+  Future<void> createSessionFromLesson({
+    required String lessonId,
     required int weekNumber,
     required String lessonTitle,
     required DateTime postedDate,
-    required int minAge,
-    required int maxAge,
-  }) {
-    if (hasSessionForWeek(weekNumber)) return;
+    required DateTime deadline,
+  }) async {
+    final teacherId = AuthSession.userId;
+    if (teacherId == null) return;
 
-    final sessionDate = _sundayForPostedDate(postedDate);
-    final session = TeacherAttendanceSession(
-      id: 'ts-${_sessionCounter++}',
-      sessionDate: sessionDate,
-      weekNumber: weekNumber,
-      lessonTitle: lessonTitle,
-      students: TeacherAttendanceData.rosterForAgeRange(minAge, maxAge),
-    );
+    try {
+      final alreadyExists = await TeacherAttendanceSupabaseService
+          .hasSessionForWeek(teacherId: teacherId, weekNumber: weekNumber);
+      if (alreadyExists) return;
 
-    _sessions.add(session);
-    _selectedSessionId = session.id;
-    notifyListeners();
-  }
+      final sessionId =
+          await TeacherAttendanceSupabaseService.createSessionFromLesson(
+        lessonId: lessonId,
+        weekNumber: weekNumber,
+        lessonTitle: lessonTitle,
+        postedDate: postedDate,
+        deadline: deadline,
+      );
 
-  DateTime _sundayForPostedDate(DateTime postedDate) {
-    final date = DateTime(postedDate.year, postedDate.month, postedDate.day);
-    if (date.weekday == DateTime.saturday) {
-      return date.add(const Duration(days: 1));
+      await loadFromSupabase();
+      _selectedSessionId = sessionId;
+      notifyListeners();
+    } catch (error, stackTrace) {
+      debugPrint(
+        'TeacherAttendanceStore.createSessionFromLesson failed: $error\n$stackTrace',
+      );
+      _error = error.toString();
+      notifyListeners();
     }
-    if (date.weekday == DateTime.sunday) {
-      return date;
-    }
-    final daysUntilSunday = (DateTime.sunday - date.weekday) % 7;
-    return date.add(Duration(days: daysUntilSunday));
   }
 
   TeacherSessionSummary get sessionSummary {
@@ -139,12 +186,11 @@ class TeacherAttendanceStore extends ChangeNotifier {
       absent: absent,
       online: online,
       unmarked: unmarked,
-      attendancePercent:
-          total == 0 ? 0 : ((attended / total) * 100).round(),
+      attendancePercent: total == 0 ? 0 : ((attended / total) * 100).round(),
     );
   }
 
-  void markStudent(String studentId, AttendanceStatus status) {
+  Future<void> markStudent(String studentId, AttendanceStatus status) async {
     final session = selectedSession;
     if (session == null || !session.isEditable) return;
 
@@ -152,6 +198,21 @@ class TeacherAttendanceStore extends ChangeNotifier {
       if (student.id == studentId) {
         student.physicalStatus = status;
         notifyListeners();
+
+        try {
+          await TeacherAttendanceSupabaseService.markStudent(
+            sessionId: session.id,
+            studentId: studentId,
+            status: status,
+          );
+        } catch (error, stackTrace) {
+          debugPrint(
+            'TeacherAttendanceStore.markStudent failed: $error\n$stackTrace',
+          );
+          student.physicalStatus = null;
+          _error = error.toString();
+          notifyListeners();
+        }
         return;
       }
     }

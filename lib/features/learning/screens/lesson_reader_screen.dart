@@ -8,6 +8,7 @@ import 'package:kitoapp/features/learning/services/learning_progress_store.dart'
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/learning_progress_provider.dart';
+import 'package:kitoapp/shared/widgets/student_learning_catalog_provider.dart';
 
 class LessonReaderScreen extends StatefulWidget {
   const LessonReaderScreen({super.key, required this.itemId});
@@ -75,7 +76,9 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final item = StudentLearningData.findById(widget.itemId);
+    final catalog = StudentLearningCatalogProvider.of(context);
+    final item = catalog.findById(widget.itemId) ??
+        StudentLearningData.findById(widget.itemId);
 
     if (item == null) {
       return AppScaffold(
@@ -84,7 +87,7 @@ class _LessonReaderScreenState extends State<LessonReaderScreen> {
       );
     }
 
-    final content = StudentLearningData.lessonContentFor(widget.itemId);
+    final content = catalog.lessonContentFor(widget.itemId);
     final store = LearningProgressProvider.of(context);
 
     return ListenableBuilder(

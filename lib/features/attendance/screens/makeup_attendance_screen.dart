@@ -3,10 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
 import 'package:kitoapp/features/attendance/models/attendance_session.dart';
-import 'package:kitoapp/features/learning/data/student_learning_data.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
 import 'package:kitoapp/shared/widgets/app_scaffold.dart';
 import 'package:kitoapp/shared/widgets/attendance_store_provider.dart';
+import 'package:kitoapp/shared/widgets/student_learning_catalog_provider.dart';
 
 class MakeupAttendanceScreen extends StatelessWidget {
   const MakeupAttendanceScreen({super.key, required this.sessionId});
@@ -50,8 +50,10 @@ class _MakeupBody extends StatelessWidget {
     final store = AttendanceStoreProvider.of(context);
     final locale = Localizations.localeOf(context).toString();
     final dateLabel = DateFormat.yMMMd(locale).format(session.sessionDate);
-    final content =
-        StudentLearningData.lessonContentFor(session.lessonId ?? '');
+    final content = session.lessonId == null
+        ? ''
+        : StudentLearningCatalogProvider.of(context)
+            .lessonContentFor(session.lessonId!);
 
     return Column(
       children: [

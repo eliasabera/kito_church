@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kitoapp/core/theme/app_colors.dart';
-import 'package:kitoapp/features/dashboard/data/bible_stories_data.dart';
-import 'package:kitoapp/features/dashboard/models/bible_story.dart';
+import 'package:kitoapp/features/bible_stories/models/bible_story.dart';
+import 'package:kitoapp/features/bible_stories/widgets/bible_story_image.dart';
 import 'package:kitoapp/l10n/app_localizations.dart';
+import 'package:kitoapp/shared/widgets/bible_stories_store_provider.dart';
 
 class StudentBibleStoriesSlider extends StatefulWidget {
   const StudentBibleStoriesSlider({super.key});
@@ -17,6 +18,17 @@ class _StudentBibleStoriesSliderState extends State<StudentBibleStoriesSlider> {
   int _currentPage = 0;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final store = BibleStoriesStoreProvider.of(context);
+      if (store.allStories.isEmpty) {
+        store.load();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
@@ -25,133 +37,117 @@ class _StudentBibleStoriesSliderState extends State<StudentBibleStoriesSlider> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final stories = BibleStoriesData.stories;
+    final store = BibleStoriesStoreProvider.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return ListenableBuilder(
+      listenable: store,
+      builder: (context, _) {
+        final stories = store.publishedStories;
+
+        if (stories.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        final pageCount = stories.length;
+        if (_currentPage >= pageCount) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) setState(() => _currentPage = 0);
+          });
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                Icons.auto_stories_outlined,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.bibleStories,
-                    style: const TextStyle(
-                      color: AppColors.text,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Text(
-                    l10n.swipeBibleStories,
-                    style: TextStyle(
-                      color: AppColors.text.withValues(alpha: 0.5),
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 14),
-        SizedBox(
-          height: 220,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: stories.length,
-            onPageChanged: (index) => setState(() => _currentPage = index),
-            itemBuilder: (context, index) {
-              final story = stories[index];
-              final isActive = index == _currentPage;
-              return AnimatedScale(
-                scale: isActive ? 1.0 : 0.94,
-                duration: const Duration(milliseconds: 250),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: _StorySlide(
-                    story: story,
-                    title: _storyTitle(story.id, l10n),
-                    summary: _storySummary(story.id, l10n),
+                  child: const Icon(
+                    Icons.auto_stories_outlined,
+                    color: AppColors.primary,
+                    size: 20,
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(stories.length, (index) {
-            final active = index == _currentPage;
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              width: active ? 20 : 7,
-              height: 7,
-              decoration: BoxDecoration(
-                color: active
-                    ? AppColors.primary
-                    : AppColors.primary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(4),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.bibleStories,
+                        style: const TextStyle(
+                          color: AppColors.text,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        l10n.swipeBibleStories,
+                        style: TextStyle(
+                          color: AppColors.text.withValues(alpha: 0.5),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            SizedBox(
+              height: 220,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: pageCount,
+                onPageChanged: (index) => setState(() => _currentPage = index),
+                itemBuilder: (context, index) {
+                  final story = stories[index];
+                  final isActive = index == _currentPage;
+                  return AnimatedScale(
+                    scale: isActive ? 1.0 : 0.94,
+                    duration: const Duration(milliseconds: 250),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: _StorySlide(story: story),
+                    ),
+                  );
+                },
               ),
-            );
-          }),
-        ),
-      ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(pageCount, (index) {
+                final active = index == _currentPage;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  width: active ? 20 : 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: active
+                        ? AppColors.primary
+                        : AppColors.primary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                );
+              }),
+            ),
+          ],
+        );
+      },
     );
-  }
-
-  String _storyTitle(String id, AppLocalizations l10n) {
-    return switch (id) {
-      'david_goliath' => l10n.storyDavidTitle,
-      'moses_red_sea' => l10n.storyMosesTitle,
-      'jonah' => l10n.storyJonahTitle,
-      'daniel' => l10n.storyDanielTitle,
-      'good_samaritan' => l10n.storySamaritanTitle,
-      'jesus_calms_storm' => l10n.storyJesusStormTitle,
-      _ => '',
-    };
-  }
-
-  String _storySummary(String id, AppLocalizations l10n) {
-    return switch (id) {
-      'david_goliath' => l10n.storyDavidSummary,
-      'moses_red_sea' => l10n.storyMosesSummary,
-      'jonah' => l10n.storyJonahSummary,
-      'daniel' => l10n.storyDanielSummary,
-      'good_samaritan' => l10n.storySamaritanSummary,
-      'jesus_calms_storm' => l10n.storyJesusStormSummary,
-      _ => '',
-    };
   }
 }
 
 class _StorySlide extends StatelessWidget {
-  const _StorySlide({
-    required this.story,
-    required this.title,
-    required this.summary,
-  });
+  const _StorySlide({required this.story});
 
   final BibleStory story;
-  final String title;
-  final String summary;
 
   @override
   Widget build(BuildContext context) {
@@ -170,18 +166,7 @@ class _StorySlide extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
-            story.imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: AppColors.primary.withValues(alpha: 0.15),
-              child: const Icon(
-                Icons.menu_book_outlined,
-                color: AppColors.primary,
-                size: 48,
-              ),
-            ),
-          ),
+          BibleStoryImage(story: story),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -220,7 +205,7 @@ class _StorySlide extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  title,
+                  story.title,
                   style: const TextStyle(
                     color: AppColors.background,
                     fontSize: 20,
@@ -230,7 +215,7 @@ class _StorySlide extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  summary,
+                  story.summary,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

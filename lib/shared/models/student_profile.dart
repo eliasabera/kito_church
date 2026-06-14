@@ -6,7 +6,7 @@ class StudentProfile {
     required this.compassionProjectId,
     required this.fullName,
     required this.dateOfBirth,
-    required this.grade,
+    required this.university,
     this.phoneNumber,
     this.registrationStatus = RegistrationStatus.pending,
   });
@@ -15,7 +15,7 @@ class StudentProfile {
   final String compassionProjectId;
   final String fullName;
   final DateTime dateOfBirth;
-  final String grade;
+  final String university;
   final String? phoneNumber;
   final RegistrationStatus registrationStatus;
 }

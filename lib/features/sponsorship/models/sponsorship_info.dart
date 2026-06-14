@@ -20,12 +20,12 @@ class SponsorLetter {
   const SponsorLetter({
     required this.id,
     required this.date,
-    required this.preview,
+    required this.body,
     required this.isNew,
   });
 
   final String id;
   final DateTime date;
-  final String preview;
+  final String body;
   final bool isNew;
 }

@@ -24,6 +24,7 @@ class PrayerRequest {
     required this.message,
     required this.date,
     required this.authorName,
+    this.authorId,
     this.status = PrayerRequestStatus.praying,
     this.isPrivate = false,
     Set<String>? likedBy,
@@ -35,6 +36,7 @@ class PrayerRequest {
   final String message;
   final DateTime date;
   final String authorName;
+  final String? authorId;
   PrayerRequestStatus status;
   final bool isPrivate;
   final Set<String> likedBy;
